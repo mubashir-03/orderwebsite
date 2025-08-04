@@ -429,18 +429,66 @@
             }
             
             .price-display {
-                flex-direction: column;
                 align-items: flex-start;
-                gap: 5px;
+                gap: 15px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: var(--border-radius);
+                transition: var(--transition);
+            }
+            
+            .contact-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .contact-icon {
+                width: 50px;
+                height: 50px;
+                min-width: 50px;
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.2rem;
+            }
+            
+            .contact-details {
+                flex: 1;
+            }
+            
+            .contact-type {
+                font-size: clamp(0.8rem, 3vw, 0.9rem);
+                color: var(--gray-color);
+                margin-bottom: 5px;
+            }
+            
+            .contact-value {
+                font-size: clamp(0.9rem, 3vw, 1.1rem);
+                font-weight: 500;
+                color: var(--dark-color);
+                word-break: break-word;
+            }
+            
+            .contact-value a {
+                color: var(--primary-color);
+                text-decoration: none;
+                transition: var(--transition);
+            }
+            
+            .contact-value a:hover {
+                color: var(--secondary-color);
+                text-decoration: underline;
             }
             
             .social-links {
-                justify-content: center;
+                display: flex;
+                gap: 15px;
+                margin-top: 50px;
+                flex-wrap: wrap;
             }
-        }
-        
-        /* Very small devices (phones, 360px and down) */
-        @media (max-width: 360px) {
             .form-control, .submit-btn, .file-input-button {
                 padding: 10px 12px;
             }
