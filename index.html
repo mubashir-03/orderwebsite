@@ -540,6 +540,30 @@
         font-size: 1.2rem;
     }
 }
+.view-work-btn {
+    animation: popup 0.6s cubic-bezier(0.23, 1.12, 0.32, 1) 1;
+}
+
+@keyframes popup {
+    0% {
+        transform: scale(0.2);
+        opacity: 0.2;
+    }
+    70% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.view-work-btn:hover {
+    animation: popup 0.4s cubic-bezier(0.23, 1.12, 0.32, 1);
+    background: #c92b18;
+    color: #fff;
+}
 </style>
 </head>
 <body>
@@ -632,6 +656,7 @@
                         <span class="price-label">Total Project Cost:</span>
                         <span class="price-value" id="totalPrice">$0</span>
                     </div>
+                    <input type="hidden" name="total_cost" id="total_cost_input">
                     <p class="form-note">This is the final price based on your project requirements.</p>
                 </div>
                 
@@ -639,6 +664,7 @@
                     <label for="details">Project Details *</label>
                     <textarea id="details" name="details" class="form-control" required placeholder="Please describe your project in detail including features, design preferences, target audience, and any specific requirements..."></textarea>
                     <p class="form-note">The more details you provide, the more accurate our proposal will be.</p>
+                   
                 </div>
                 
                 <div class="form-group animated delay-3 full-width">
@@ -651,6 +677,8 @@
                         <input type="file" id="files" name="files" multiple>
                     </div>
                     <p class="form-note">You can upload design references, documents, or any other relevant files (Max 10MB).</p>
+                    <p class="form-note" style="color: red;">(Note: If you submit the order and it's not verify so then refresh your page and submit again).</p>
+                    <p class="form-note" style="color: red;">(Note: When Your form is verify so this mean that your order is completed successfully).</p>
                 </div>
                 
                 <button type="submit" class="submit-btn animated delay-3">
@@ -663,8 +691,9 @@
         <section class="section contact-section animated">
             <div class="contact-info">
                 <div class="header">
-                    <h1>Contact Me</h1>
-                    <p>Have a project in mind or want to discuss potential opportunities? Feel free to reach out through any of these channels.</p>
+    <h1>Contact Me</h1>
+    <p>Have a project in mind or want to discuss potential opportunities? Feel free to reach out through any of these channels.</p>
+    <a href="https://mubashir-03.github.io/PortfolioMubashir/" target="_blank" class="view-work-btn" style="display:inline-block;margin-top:15px;padding:12px 28px;background:#fb4631;color:#fff;font-weight:600;border:none;border-radius:10px;text-decoration:none;transition:background 0.2s;">View MY Work</a>
                 </div>
                 
                 <div class="social-links">
@@ -731,7 +760,7 @@
                 const package = packageSelect.value;
                 const pages = pagesSelect.value;
                 const urgency = urgencySelect.value;
-                
+                const totalCostInput = document.getElementById('total_cost_input');
                 if (package && pages && urgency) {
                     const basePrice = packagePrices[package];
                     const pageFactor = pageMultipliers[pages];
@@ -739,8 +768,10 @@
                     
                     const total = basePrice * pageFactor * urgencyFactor;
                     totalPriceElement.textContent = `$${Math.round(total)}`;
+                    if (totalCostInput) totalCostInput.value = Math.round(total);
                 } else {
                     totalPriceElement.textContent = '$0';
+                    if (totalCostInput) totalCostInput.value = '';
                 }
             }
             
