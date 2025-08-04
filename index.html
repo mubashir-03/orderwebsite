@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mubashir Khan - Professional Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --gray-color: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7ff;
+            min-height: 100vh;
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 0 15px;
+        }
+        
+        .header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 10px;
+            color: var(--dark-color);
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        
+        .header p {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: var(--gray-color);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Section Styles */
+        .section {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: clamp(25px, 5vw, 40px);
+            margin-bottom: 30px;
+            transition: var(--transition);
+            width: 100%;
+        }
+        
+        .section:hover {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .section-title {
+            font-size: clamp(1.4rem, 4vw, 1.8rem);
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        /* Order Section Styles */
+        .order-section {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .order-section::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(76, 201, 240, 0.1), transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .order-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+            font-size: clamp(0.9rem, 3vw, 1rem);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            transition: var(--transition);
+            background-color: #f8f9fa;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            background-color: white;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-note {
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+            color: var(--gray-color);
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+        
+        .submit-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+        
+        .price-calculator {
+            grid-column: 1 / -1;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .price-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        .price-label {
+            font-weight: 500;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+        }
+        
+        .price-value {
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        /* Contact Section Styles */
+        .contact-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .contact-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .contact-details {
+            flex: 1;
+        }
+        
+        .contact-type {
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+            color: var(--gray-color);
+            margin-bottom: 5px;
+        }
+        
+        .contact-value {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            font-weight: 500;
+            color: var(--dark-color);
+            word-break: break-word;
+        }
+        
+        .contact-value a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .contact-value a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        
+        .social-link.facebook {
+            background: #3b5998;
+        }
+        
+        .social-link.twitter {
+            background: #1da1f2;
+        }
+        
+        .social-link.linkedin {
+            background: #0077b5;
+        }
+        
+        .social-link.instagram {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+        
+        .social-link:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+        
+        .contact-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        /* File Input Styling */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-button {
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            color: var(--gray-color);
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .file-input-button:hover {
+            background-color: #e9ecef;
+        }
+        
+        .file-input-button i {
+            margin-left: 10px;
+        }
+        
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animated {
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .order-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-section {
+                gap: 30px;
+            }
+            
+            .contact-card {
+                padding: 15px;
+            }
+            
+            .contact-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .section {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                margin-bottom: 30px;
+            }
+            
+            .price-calculator {
+                padding: 15px;
+            }
+            
+            .price-display {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+        
+        /* Very small devices (phones, 360px and down) */
+        @media (max-width: 360px) {
+            .form-control, .submit-btn, .file-input-button {
+                padding: 10px 12px;
+            }
+            
+            .contact-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .contact-icon {
+                margin-bottom: 10px;
+            }
+        }
+    .fixed-contact-icons {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.fixed-contact-icons a {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(67, 97, 238, 0.15);
+    font-size: 1.5rem;
+    transition: background 0.2s, transform 0.2s;
+    text-decoration: none;
+}
+.fixed-contact-icons a:hover {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    transform: scale(1.1);
+}
+@media (max-width: 600px) {
+    .fixed-contact-icons {
+        bottom: 12px;
+        right: 12px;
+        gap: 10px;
+    }
+    .fixed-contact-icons a {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <!-- Order Section -->
+        <section class="section order-section animated">
+            <div class="header">
+                <h1>Place Your Order</h1>
+                <p>Fill out the form below to request my professional services. I'll get back to you within 24 hours to discuss your project details.</p>
+            </div>
+            
+            <form action="https://formsubmit.co/mubashir131213@gmail.com" method="POST" class="order-form" enctype="multipart/form-data">
+                <input type="hidden" name="_subject" value="New Order Request">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html">
+                
+                <div class="form-group animated delay-1">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" class="form-control" required placeholder="John Doe">
+                </div>
+                
+                <div class="form-group animated delay-1">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" class="form-control" required placeholder="john@example.com">
+                </div>
+                
+                <div class="form-group animated delay-2">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" required placeholder="+92 300 1234567">
+                </div>
+                <div class="form-group animated delay-2">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" class="form-control" placeholder="Your address (optional)">
+                </div>
+                <div class="form-group animated delay-2">
+                    <label for="company">Company/Organization</label>
+                    <input type="text" id="company" name="company" class="form-control" placeholder="Your company name (optional)">
+                </div>
+                
+                <div class="form-group animated delay-3">
+                    <label for="service">Project Type *</label>
+                    <select id="service" name="service" class="form-control" required>
+                        <option value="" disabled selected>Select a project type</option>
+                        <option value="E-commerce Website">Shop Website</option>
+                        <option value="School/Educational Website">School/Educational Website</option>
+                        <option value="Mobile App Design">Mobile App Design</option>
+                        <option value="Portfolio Website">Portfolio Website</option>
+                        <option value="Corporate Website">Corporate Website</option>
+                        <option value="Landing Page">Landing Page</option>
+                       
+                        <option value="Other">Other (please specify in Project Details)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group animated delay-3">
+                    <label for="package">Service Package *</label>
+                    <select id="package" name="package" class="form-control" required>
+                        <option value="" disabled selected>Select a package</option>
+                        <option value="Basic">Basic ($30/page) - Simple design, basic functionality</option>
+                        <option value="Advanced">Advanced ($60/page) - Custom design, enhanced features</option>
+                        <option value="Premium">Premium ($90/page) - Premium design, complex functionality</option>
+                    </select>
+                </div>
+                
+                <div class="form-group animated delay-1">
+                    <label for="pages">Estimated Pages/Components *</label>
+                    <select id="pages" name="pages" class="form-control" required>
+                        <option value="" disabled selected>Select number of pages</option>
+                        <option value="1">1 Page</option>
+                        <option value="2-3">2-3 Pages</option>
+                        <option value="4-5">4-5 Pages</option>
+                        <option value="6-10">6-10 Pages</option>
+                        <option value="10+">10+ Pages</option>
+                    </select>
+                </div>
+                
+                <div class="form-group animated delay-2">
+                    <label for="urgency">Project Urgency *</label>
+                    <select id="urgency" name="urgency" class="form-control" required>
+                        <option value="" disabled selected>Select timeline</option>
+                        <option value="Standard (1-2 weeks)">Standard (1-2 weeks)</option>
+                        <option value="Fast (4-7 days)">Fast (4-7 days) (+20% fee)</option>
+                        <option value="Urgent (2-4 days)">Urgent (2-4 days) (+40% fee)</option>
+                    </select>
+                </div>
+                
+                <div class="price-calculator animated delay-3">
+                    <h3>Final Cost</h3>
+                    <div class="price-display">
+                        <span class="price-label">Total Project Cost:</span>
+                        <span class="price-value" id="totalPrice">$0</span>
+                    </div>
+                    <p class="form-note">This is the final price based on your project requirements.</p>
+                </div>
+                
+                <div class="form-group animated delay-3 full-width">
+                    <label for="details">Project Details *</label>
+                    <textarea id="details" name="details" class="form-control" required placeholder="Please describe your project in detail including features, design preferences, target audience, and any specific requirements..."></textarea>
+                    <p class="form-note">The more details you provide, the more accurate our proposal will be.</p>
+                </div>
+                
+                <div class="form-group animated delay-3 full-width">
+                    <label for="files">Upload Files (Optional)</label>
+                    <div class="file-input-wrapper">
+                        <div class="file-input-button">
+                            <span>Choose files...</span>
+                            <i class="fas fa-paperclip"></i>
+                        </div>
+                        <input type="file" id="files" name="files" multiple>
+                    </div>
+                    <p class="form-note">You can upload design references, documents, or any other relevant files (Max 10MB).</p>
+                </div>
+                
+                <button type="submit" class="submit-btn animated delay-3">
+                    <i class="fas fa-paper-plane"></i> Submit Order Request
+                </button>
+            </form>
+        </section>
+        
+        <!-- Contact Section -->
+        <section class="section contact-section animated">
+            <div class="contact-info">
+                <div class="header">
+                    <h1>Contact Me</h1>
+                    <p>Have a project in mind or want to discuss potential opportunities? Feel free to reach out through any of these channels.</p>
+                </div>
+                
+                <div class="social-links">
+                    <a href="mailto:mubashir131213@gmail.com" class="social-link email" title="Email" target="_blank" rel="noopener">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <a href="https://wa.me/923460563827" class="social-link whatsapp" title="WhatsApp" target="_blank" rel="noopener">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://maps.app.goo.gl/t3tUvjFxxKMCvcCaA" class="social-link location" title="Location" target="_blank" rel="noopener">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </a>
+                    <a href="#" class="social-link facebook" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link twitter" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link linkedin" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link instagram" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+            
+         
+    <script>
+        // Price calculator functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get form elements
+            const packageSelect = document.getElementById('package');
+            const pagesSelect = document.getElementById('pages');
+            const urgencySelect = document.getElementById('urgency');
+            const totalPriceElement = document.getElementById('totalPrice');
+            
+            // Package base prices
+            const packagePrices = {
+                'Basic': 30,
+                'Advanced': 60,
+                'Premium': 90
+            };
+            
+            // Page multipliers
+            const pageMultipliers = {
+                '1': 1,
+                '2-3': 2.5,
+                '4-5': 4.5,
+                '6-10': 8,
+                '10+': 12
+            };
+            
+            // Urgency multipliers
+            const urgencyMultipliers = {
+                'Standard (1-2 weeks)': 1,
+                'Fast (4-7 days)': 1.2,
+                'Urgent (2-4 days)': 1.4
+            };
+            
+            // Calculate price function
+            function calculatePrice() {
+                const package = packageSelect.value;
+                const pages = pagesSelect.value;
+                const urgency = urgencySelect.value;
+                
+                if (package && pages && urgency) {
+                    const basePrice = packagePrices[package];
+                    const pageFactor = pageMultipliers[pages];
+                    const urgencyFactor = urgencyMultipliers[urgency];
+                    
+                    const total = basePrice * pageFactor * urgencyFactor;
+                    totalPriceElement.textContent = `$${Math.round(total)}`;
+                } else {
+                    totalPriceElement.textContent = '$0';
+                }
+            }
+            
+            // Add event listeners
+            packageSelect.addEventListener('change', calculatePrice);
+            pagesSelect.addEventListener('change', calculatePrice);
+            urgencySelect.addEventListener('change', calculatePrice);
+            
+            // File input display
+            const fileInput = document.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    const fileName = this.files.length > 1 
+                        ? `${this.files.length} files selected` 
+                        : this.files[0]?.name || 'No file chosen';
+                    this.previousElementSibling.querySelector('span').textContent = fileName;
+                });
+            }
+            
+            // Animation on scroll
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.animated');
+                const windowHeight = window.innerHeight;
+                
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementPosition < windowHeight - elementVisible) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Trigger once on load
+            
+            // Handle form submissions
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    }
+                });
+            });
+        });
+    </script>
+    <!-- Fixed Contact Icons -->
+    <div class="fixed-contact-icons">
+      <a href="mailto:mubashir131213@gmail.com" title="Email" target="_blank" rel="noopener"><i class="fas fa-envelope"></i></a>
+      <a href="https://wa.me/923460563827" title="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://maps.app.goo.gl/t3tUvjFxxKMCvcCaA" title="Location" target="_blank" rel="noopener"><i class="fas fa-map-marker-alt"></i></a>
+    </div>
+</body>
+</html>
