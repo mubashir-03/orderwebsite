@@ -819,14 +819,20 @@
             // Handle form submissions
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    const submitButton = this.querySelector('button[type="submit"]');
-                    if (submitButton) {
-                        submitButton.disabled = true;
-                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-                    }
-                });
-            });
+    form.addEventListener('submit', function(e) {
+        const submitButton = this.querySelector('button[type="submit"]');
+        if (submitButton) {
+            const originalText = submitButton.getAttribute('data-original-text') || submitButton.textContent;
+            submitButton.setAttribute('data-original-text', originalText);
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            setTimeout(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+            }, 5000);
+        }
+    });
+});
         });
     </script>
     <!-- Fixed Contact Icons -->
