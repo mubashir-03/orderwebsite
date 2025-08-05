@@ -45,7 +45,11 @@
             width: 100%;
         }
         
-        /* Header Styles */
+        .logo-front {
+    position: relative;
+    z-index: 1000;
+}
+
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -568,9 +572,11 @@
 </head>
 <body>
     <div class="container">
+
         <!-- Order Section -->
         <section class="section order-section animated">
             <div class="header">
+                <img src="https://i.ibb.co/C5K1gJKN/Whisk-1b04389ece-1-1.png" alt="Logo" class="logo-front" style="height: 100px; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">
                 <h1>Order Your Project</h1>
                 <p>Fill out the form below to request my professional services. I'll get back to you within 24 hours to discuss your project details.</p>
             </div>
@@ -677,8 +683,8 @@
                         <input type="file" id="files" name="files" multiple>
                     </div>
                     <p class="form-note">You can upload design references, documents, or any other relevant files (Max 10MB).</p>
-                    <p class="form-note" style="color: red;">(Note: If you submit the order and it's not verify so then refresh your page and submit again).</p>
-                    <p class="form-note" style="color: red;">(Note: When Your form is verify so this mean that your order is completed successfully).</p>
+                    <p class="form-note" style="color: red;">(Note: If your order submission fails due to verification (e.g., 'I’m not a robot'), please refresh the page and try submitting again.)</p>
+                    <p class="form-note" style="color: red;">(Note: Once your form is successfully verified, your order has been submitted successfully.)</p>
                 </div>
                 
                 <button type="submit" class="submit-btn animated delay-3">
