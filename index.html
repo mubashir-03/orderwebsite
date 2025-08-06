@@ -584,7 +584,7 @@
             <form action="https://formsubmit.co/mkfd.71@gmail.com" method="POST" class="order-form" enctype="multipart/form-data">
                 <input type="hidden" name="_subject" value="New Order Request">
                 <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html">
+                <input type="hidden" name="_next" value="https://mubashir-03.github.io/Thank-You-Order-Confirmation-orderwebsite/thank-you.html">
                 
                 <div class="form-group animated delay-1">
                     <label for="name">Full Name *</label>
@@ -703,7 +703,7 @@
                 </div>
                 
                 <div class="social-links">
-                    <a href="mailto:mubashir131213@gmail.com" class="social-link email" title="Email" target="_blank" rel="noopener">
+                    <a href="mailto:mkfd.71@gmail.com" class="social-link email" title="Email" target="_blank" rel="noopener">
                         <i class="fas fa-envelope"></i>
                     </a>
                     <a href="https://wa.me/923460563827" class="social-link whatsapp" title="WhatsApp" target="_blank" rel="noopener">
@@ -822,14 +822,14 @@
     form.addEventListener('submit', function(e) {
         const submitButton = this.querySelector('button[type="submit"]');
         if (submitButton) {
-            const originalText = submitButton.getAttribute('data-original-text') || submitButton.textContent;
-            submitButton.setAttribute('data-original-text', originalText);
+            const originalHTML = submitButton.getAttribute('data-original-html') || submitButton.innerHTML;
+            submitButton.setAttribute('data-original-html', originalHTML);
             submitButton.disabled = true;
             submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             setTimeout(() => {
                 submitButton.disabled = false;
-                submitButton.innerHTML = originalText;
-            }, 5000);
+                submitButton.innerHTML = originalHTML;
+            }, 7000);
         }
     });
 });
@@ -837,7 +837,7 @@
     </script>
     <!-- Fixed Contact Icons -->
     <div class="fixed-contact-icons">
-      <a href="mailto:mubashir131213@gmail.com" title="Email" target="_blank" rel="noopener"><i class="fas fa-envelope"></i></a>
+      <a href="mailto:mkfd.71@gmail.com" title="Email" target="_blank" rel="noopener"><i class="fas fa-envelope"></i></a>
       <a href="https://wa.me/923460563827" title="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
       <a href="https://maps.app.goo.gl/t3tUvjFxxKMCvcCaA" title="Location" target="_blank" rel="noopener"><i class="fas fa-map-marker-alt"></i></a>
     </div>
