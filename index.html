@@ -150,8 +150,8 @@
         .form-control {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: var(--border-radius);
+            border: 1px solid #fffefe;
+            border-radius: 5px;
             font-size: clamp(0.9rem, 3vw, 1rem);
             transition: var(--transition);
             background-color: #f8f9fa;
@@ -160,7 +160,7 @@
         .form-control:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            box-shadow: 0 0 0 3px rgba(11, 44, 187, 0.2);
             background-color: white;
         }
         
@@ -613,7 +613,7 @@
                     <label for="service">Project Type *</label>
                     <select id="service" name="service" class="form-control" required>
                         <option value="" disabled selected>Select a project type</option>
-                        <option value="E-commerce Website">Shop Website</option>
+                        <option value="Shop Website">Shop Website</option>
                         <option value="School/Educational Website">School/Educational Website</option>
                         <option value="Mobile App Design">Mobile App Design</option>
                         <option value="Portfolio Website">Portfolio Website</option>
@@ -641,7 +641,8 @@
                         <option value="1">1 Page</option>
                         <option value="2-3">2-3 Pages</option>
                         <option value="4-5">4-5 Pages</option>
-                        <option value="6-10">6-10 Pages</option>
+                        <option value="6-7">6-7 Pages</option>
+                        <option value="7-10">8-10 Pages</option>
                         <option value="10+">10+ Pages</option>
                     </select>
                 </div>
@@ -742,15 +743,16 @@
             const packagePrices = {
                 'Basic': 30,
                 'Advanced': 60,
-                'Premium': 90
+                'Premium': 90,
             };
             
             // Page multipliers
             const pageMultipliers = {
                 '1': 1,
-                '2-3': 2.5,
-                '4-5': 4.5,
-                '6-10': 8,
+                '2-3': 3,
+                '4-5': 5,
+                '6-7': 7,
+                '7-10': 10,
                 '10+': 12
             };
             
