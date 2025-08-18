@@ -547,66 +547,6 @@
     background: #c92b18;
     color: #fff;
 }
-
-/* Success Modal Styles */
-.success-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 40px;
-    border-radius: var(--border-radius);
-    text-align: center;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.3s ease;
-}
-
-.modal-icon {
-    font-size: 60px;
-    color: var(--success-color);
-    margin-bottom: 20px;
-}
-
-.modal-title {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    color: var(--dark-color);
-}
-
-.modal-message {
-    font-size: 1.1rem;
-    margin-bottom: 25px;
-    color: var(--gray-color);
-}
-
-.modal-btn {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    padding: 12px 30px;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.modal-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
-}
 </style>
 </head>
 <body>
@@ -620,9 +560,10 @@
                 <p>Fill out the form below to request my professional services. I'll get back to you within 24 hours to discuss your project details.</p>
             </div>
             
-            <form id="orderForm" class="order-form" enctype="form-data">
+            <form action="https://formsubmit.co/mkfd.71@gmail.com" method="POST" class="order-form" enctype="multipart/form-data">
                 <input type="hidden" name="_subject" value="New Order Request">
                 <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_next" value="https://mubashir-03.github.io/Thank-You-Order-Confirmation-orderwebsite/thank-you.html">
                 
                 <div class="form-group animated delay-1">
                     <label for="name">Full Name *</label>
@@ -709,6 +650,7 @@
                     <label for="details">Project Details *</label>
                     <textarea id="details" name="details" class="form-control" required placeholder="Please describe your project in detail including features, design preferences, target audience, and any specific requirements..."></textarea>
                     <p class="form-note">The more details you provide, the more accurate our proposal will be.</p>
+                   
                 </div>
                 
                 <div class="form-group animated delay-3 full-width">
@@ -721,6 +663,8 @@
                         <input type="file" id="files" name="files" multiple>
                     </div>
                     <p class="form-note">You can upload design references, documents, or any other relevant files (Max 10MB).</p>
+                    <p class="form-note" style="color: red;">(Note: If your order submission fails due to verification (e.g., 'I’m not a robot'), please refresh the page and try submitting again.)</p>
+                    <p class="form-note" style="color: red;">(Note: Once (i'm not a robot) is  verified, your order has been submitted successfully.)</p>
                 </div>
                 
                 <button type="submit" class="submit-btn animated delay-3">
@@ -740,6 +684,7 @@
                 
                 <div class="social-links">
                     
+                    </a>
                     <a href="#" class="social-link twitter" title="twitter">
                         <i class="fab fa-twitter"></i>
                     </a>
@@ -752,7 +697,8 @@
                     </a>
                     <a href="#" class="social-link instagram" title="Instagram">
                         <i class="fab fa-instagram"></i>
-                    </a> 
+                    </a>
+
                     <a href="#" class="social-link whatsapp" title="whatsapp">
                         <i class="fab fa-whatsapp"></i>
                     </a> 
@@ -761,25 +707,8 @@
                     </a> 
                 </div>
             </div>
-        </section>
-    </div>
-
-   
-    
-    <!-- Success Modal -->
-    <div class="success-modal" id="successModal">
-        <div class="modal-content">
-            <div class="modal-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h2 class="modal-title">Order Submitted Successfully!</h2>
-            <p class="modal-message">Thank you for your order. I'll review your request and get back to you within 24 hours.</p>
-            <button class="modal-btn" id="returnHomeBtn">Return to Home</button>
-        </div>
-    </div>
-    
-    
-
+            
+         
     <script>
         // Price calculator functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -868,53 +797,25 @@
             window.addEventListener('scroll', animateOnScroll);
             animateOnScroll(); // Trigger once on load
             
-            // Form submission handling
-            const orderForm = document.getElementById('orderForm');
-            const successModal = document.getElementById('successModal');
-            const returnHomeBtn = document.getElementById('returnHomeBtn');
-            
-            if (orderForm) {
-                orderForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const submitButton = this.querySelector('button[type="submit"]');
-                    if (submitButton) {
-                        const originalHTML = submitButton.innerHTML;
-                        submitButton.disabled = true;
-                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-                        
-                        // Simulate form submission (replace with actual form submission if needed)
-                        setTimeout(() => {
-                            // Show success modal
-                            successModal.style.display = 'flex';
-                            
-                            // Reset form and button
-                            submitButton.disabled = false;
-                            submitButton.innerHTML = originalHTML;
-                            
-                            // Optional: Actually submit the form to your backend
-                            // You can uncomment this if you want to still submit to FormSubmit
-                            
-                            const formData = new FormData(orderForm);
-                            fetch('https://formsubmit.co/mkfd.71@gmail.com', {
-                                method: 'POST',
-                                body: formData
-                            });
-                            
-                        }, 1500);
-                    }
-                });
-            }
-            
-            // Return home button
-            if (returnHomeBtn) {
-                returnHomeBtn.addEventListener('click', function() {
-                    successModal.style.display = 'none';
-                    // Redirect to home or refresh the page
-                    window.location.href = window.location.href.split('?')[0];
-                });
-            }
+            // Handle form submissions
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+    form.addEventListener('submit', function(e) {
+        const submitButton = this.querySelector('button[type="submit"]');
+        if (submitButton) {
+            const originalHTML = submitButton.getAttribute('data-original-html') || submitButton.innerHTML;
+            submitButton.setAttribute('data-original-html', originalHTML);
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            setTimeout(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalHTML;
+            }, 7000);
+        }
+    });
+});
         });
     </script>
+   
 </body>
 </html>
