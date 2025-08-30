@@ -46,9 +46,9 @@
         }
         
         .logo-front {
-    position: relative;
-    z-index: 1000;
-}
+            position: relative;
+            z-index: 1000;
+        }
 
         .header {
             text-align: center;
@@ -146,7 +146,8 @@
             color: var(--dark-color);
             font-size: clamp(0.9rem, 3vw, 1rem);
         }
-          .form-control {
+        
+        .form-control {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #fffefe;
@@ -156,7 +157,6 @@
             background-color: #f8f9fa;
         }
         
-      
         .form-control:focus {
             outline: none;
             border-color: var(--primary-color);
@@ -296,46 +296,43 @@
             text-decoration: underline;
         }
         
+        /* Updated Social Icons Styling */
         .social-links {
             display: flex;
-            gap: 15px;
-            margin-top: 50px;
+            gap: 12px;
+            margin-top: 40px;
             flex-wrap: wrap;
+            justify-content: center;
         }
-        
+
         .social-link {
-            width: 50px;
-            height: 50px;
-            border-radius: 40%;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             transition: var(--transition);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        
-        .social-link.facebook {
-            background: #1877F2;
-        }
-        
-       
-        
-        .social-link.linkedin {
-            background: #0077b5;
-        }
-        
-        .social-link.instagram {
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-        }
-        .social-link.whatsapp {
-    background: #25D366
-}
-.social-link.email {
-    background: linear-gradient(45deg, #4361ee, #4cc9f0, #3f37c9, #4895ef);
-}
+
         .social-link:hover {
             transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Specific icon colors remain the same */
+        .social-link.facebook { background: #1877F2; }
+        .social-link.twitter { background: #1DA1F2; }
+        .social-link.linkedin { background: #0077b5; }
+        .social-link.instagram { 
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); 
+        }
+        .social-link.whatsapp { background: #25D366; }
+        .social-link.email { 
+            background: linear-gradient(45deg, #4361ee, #4cc9f0, #3f37c9, #4895ef); 
         }
         
         .contact-form .form-group {
@@ -420,6 +417,18 @@
                 height: 40px;
                 font-size: 1rem;
             }
+            
+            /* Responsive adjustments for social icons */
+            .social-links {
+                gap: 10px;
+                margin-top: 30px;
+            }
+            
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -490,12 +499,6 @@
                 text-decoration: underline;
             }
             
-            .social-links {
-                display: flex;
-                gap: 15px;
-                margin-top: 50px;
-                flex-wrap: wrap;
-            }
             .form-control, .submit-btn, .file-input-button {
                 padding: 10px 12px;
             }
@@ -509,45 +512,57 @@
             .contact-icon {
                 margin-bottom: 10px;
             }
+            
+            /* Mobile adjustments for social icons */
+            .social-links {
+                gap: 8px;
+            }
+            
+            .social-link {
+                width: 38px;
+                height: 38px;
+                font-size: 0.95rem;
+            }
         }
    
-@media (max-width: 600px) {
-    .fixed-contact-icons {
-        bottom: 12px;
-        right: 12px;
-        gap: 10px;
-    }
-    .fixed-contact-icons a {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-    }
-}
-.view-work-btn {
-    animation: popup 0.6s cubic-bezier(0.23, 1.12, 0.32, 1) 1;
-}
+        @media (max-width: 600px) {
+            .fixed-contact-icons {
+                bottom: 12px;
+                right: 12px;
+                gap: 10px;
+            }
+            .fixed-contact-icons a {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        .view-work-btn {
+            animation: popup 0.6s cubic-bezier(0.23, 1.12, 0.32, 1) 1;
+        }
 
-@keyframes popup {
-    0% {
-        transform: scale(0.2);
-        opacity: 0.2;
-    }
-    70% {
-        transform: scale(1.15);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
+        @keyframes popup {
+            0% {
+                transform: scale(0.2);
+                opacity: 0.2;
+            }
+            70% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
 
-.view-work-btn:hover {
-    animation: popup 0.4s cubic-bezier(0.23, 1.12, 0.32, 1);
-    background: #c92b18;
-    color: #fff;
-}
-</style>
+        .view-work-btn:hover {
+            animation: popup 0.4s cubic-bezier(0.23, 1.12, 0.32, 1);
+            background: #c92b18;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -555,7 +570,7 @@
         <!-- Order Section -->
         <section class="section order-section animated">
             <div class="header">
-                <img src="https://i.ibb.co/C5K1gJKN/Whisk-1b04389ece-1-1.png" alt="Logo" class="logo-front" style="height: 100px; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">
+                <img src="https://i.ibb.co/ZphxgyHF/pink-99.jpg" alt="Logo" class="logo-front" style="height: 100px; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">
                 <h1>Order Your Project</h1>
                 <p>Fill out the form below to request my professional services. I'll get back to you within 24 hours to discuss your project details.</p>
             </div>
@@ -677,28 +692,24 @@
         <section class="section contact-section animated">
             <div class="contact-info">
                 <div class="header">
-    <h1>Contact Me</h1>
-    <p>Have a project in mind or want to discuss potential opportunities? Feel free to reach out through any of these channels.</p>
-    <a href="https://mubashir-03.github.io/PortfolioMubashir/" target="_blank" class="view-work-btn" style="display:inline-block;margin-top:15px;padding:12px 28px;background:#fb4631;color:#fff;font-weight:600;border:none;border-radius:10px;text-decoration:none;transition:background 0.2s;">View MY Work</a>
+                    <h1>Contact Me</h1>
+                    <p>Have a project in mind or want to discuss potential opportunities? Feel free to reach out through any of these channels.</p>
+                    <a href="https://mubashir-03.github.io/PortfolioMubashir/" target="_blank" class="view-work-btn" style="display:inline-block;margin-top:15px;padding:12px 28px;background:#fb4631;color:#fff;font-weight:600;border:none;border-radius:10px;text-decoration:none;transition:background 0.2s;">View MY Work</a>
                 </div>
                 
                 <div class="social-links">
-                    
-                    </a>
                     <a href="#" class="social-link twitter" title="twitter">
                         <i class="fab fa-twitter"></i>
                     </a>
-                     <a href="#" class="social-link facebook" title="facebook">
+                    <a href="#" class="social-link facebook" title="facebook">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                  
                     <a href="#" class="social-link linkedin" title="LinkedIn">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
                     <a href="#" class="social-link instagram" title="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-
                     <a href="#" class="social-link whatsapp" title="whatsapp">
                         <i class="fab fa-whatsapp"></i>
                     </a> 
@@ -707,8 +718,9 @@
                     </a> 
                 </div>
             </div>
-            
-         
+        </section>
+    </div>
+   
     <script>
         // Price calculator functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -800,20 +812,20 @@
             // Handle form submissions
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {
-    form.addEventListener('submit', function(e) {
-        const submitButton = this.querySelector('button[type="submit"]');
-        if (submitButton) {
-            const originalHTML = submitButton.getAttribute('data-original-html') || submitButton.innerHTML;
-            submitButton.setAttribute('data-original-html', originalHTML);
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            setTimeout(() => {
-                submitButton.disabled = false;
-                submitButton.innerHTML = originalHTML;
-            }, 7000);
-        }
-    });
-});
+                form.addEventListener('submit', function(e) {
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        const originalHTML = submitButton.getAttribute('data-original-html') || submitButton.innerHTML;
+                        submitButton.setAttribute('data-original-html', originalHTML);
+                        submitButton.disabled = true;
+                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                        setTimeout(() => {
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = originalHTML;
+                        }, 7000);
+                    }
+                });
+            });
         });
     </script>
    
