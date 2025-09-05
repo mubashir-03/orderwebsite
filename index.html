@@ -6,10 +6,11 @@
     <title>Mubashir Khan Tech Studio | Order Website Project</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* All your existing CSS remains the same */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
         :root {
-            --primary-color: #4361ee;
+            --primary-color: #05cd34;
             --secondary-color: #3f37c9;
             --accent-color: #4cc9f0;
             --dark-color: #1a1a2e;
@@ -150,7 +151,7 @@
         .form-control {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #fffefe;
+            border: 1px solid #e0e0e0;
             border-radius: 5px;
             font-size: clamp(0.9rem, 3vw, 1rem);
             transition: var(--transition);
@@ -160,8 +161,13 @@
         .form-control:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(11, 44, 187, 0.2);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
             background-color: white;
+        }
+        
+        /* NEW: Required field styling */
+        .form-control.required-field {
+            border: 1px solid var(--danger-color);
         }
         
         textarea.form-control {
@@ -192,11 +198,20 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
+            position: relative;
         }
         
         .submit-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.8;
+            cursor: not-allowed;
+            background: #cccccc;
+            transform: none;
+            box-shadow: none;
         }
         
         .price-calculator {
@@ -394,6 +409,108 @@
         .delay-2 { animation-delay: 0.4s; }
         .delay-3 { animation-delay: 0.6s; }
         
+        /* Popup Modal Styles */
+        .popup-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .popup-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: popIn 0.5s ease forwards;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-color);
+            transition: var(--transition);
+        }
+        
+        .popup-close:hover {
+            color: var(--dark-color);
+        }
+        
+        .popup-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .popup-icon.success {
+            color: var(--success-color);
+        }
+        
+        .popup-icon.error {
+            color: var(--danger-color);
+        }
+        
+        .popup-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .popup-message {
+            margin-bottom: 20px;
+            color: var(--gray-color);
+            line-height: 1.6;
+        }
+        
+        .popup-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-block;
+        }
+        
+        .popup-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+        
+        /* Button Spinner */
+        .button-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .container {
@@ -429,6 +546,14 @@
                 height: 40px;
                 font-size: 1rem;
             }
+            
+            .popup-content {
+                padding: 20px;
+            }
+            
+            .popup-title {
+                font-size: 1.5rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -445,62 +570,9 @@
             }
             
             .price-display {
+                flex-direction: column;
                 align-items: flex-start;
-                gap: 15px;
-                padding: 20px;
-                background: #f8f9fa;
-                border-radius: var(--border-radius);
-                transition: var(--transition);
-            }
-            
-            .contact-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            }
-            
-            .contact-icon {
-                width: 50px;
-                height: 50px;
-                min-width: 50px;
-                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-size: 1.2rem;
-            }
-            
-            .contact-details {
-                flex: 1;
-            }
-            
-            .contact-type {
-                font-size: clamp(0.8rem, 3vw, 0.9rem);
-                color: var(--gray-color);
-                margin-bottom: 5px;
-            }
-            
-            .contact-value {
-                font-size: clamp(0.9rem, 3vw, 1.1rem);
-                font-weight: 500;
-                color: var(--dark-color);
-                word-break: break-word;
-            }
-            
-            .contact-value a {
-                color: var(--primary-color);
-                text-decoration: none;
-                transition: var(--transition);
-            }
-            
-            .contact-value a:hover {
-                color: var(--secondary-color);
-                text-decoration: underline;
-            }
-            
-            .form-control, .submit-btn, .file-input-button {
-                padding: 10px 12px;
+                gap: 10px;
             }
             
             .contact-card {
@@ -513,6 +585,10 @@
                 margin-bottom: 10px;
             }
             
+            .form-control, .submit-btn, .file-input-button {
+                padding: 10px 12px;
+            }
+            
             /* Mobile adjustments for social icons */
             .social-links {
                 gap: 8px;
@@ -522,19 +598,6 @@
                 width: 38px;
                 height: 38px;
                 font-size: 0.95rem;
-            }
-        }
-   
-        @media (max-width: 600px) {
-            .fixed-contact-icons {
-                bottom: 12px;
-                right: 12px;
-                gap: 10px;
-            }
-            .fixed-contact-icons a {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
             }
         }
         
@@ -562,9 +625,68 @@
             background: #c92b18;
             color: #fff;
         }
+        
+        /* Add these new styles for confirmation message */
+        .confirmation-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        .config-check {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <!-- Popup Modal -->
+    <div id="popupModal" class="popup-modal">
+        <div class="popup-content">
+            <span class="popup-close" id="popupClose">&times;</span>
+            <div class="popup-icon success" id="popupIcon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="popup-title" id="popupTitle">Success!</h2>
+            <p class="popup-message" id="popupMessage">Your order has been submitted successfully. You will receive a confirmation email shortly.</p>
+            <button class="popup-button" id="popupButton">OK</button>
+        </div>
+    </div>
+
     <div class="container">
 
         <!-- Order Section -->
@@ -575,24 +697,49 @@
                 <p>Fill out the form below to request my professional services. I'll get back to you within 24 hours to discuss your project details.</p>
             </div>
             
-            <form action="https://formsubmit.co/mkfd.71@gmail.com" method="POST" class="order-form" enctype="multipart/form-data">
-                <input type="hidden" name="_subject" value="New Order Request">
-                <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_next" value="https://mubashir-03.github.io/Thank-You-Order-Confirmation-orderwebsite/thank-you.html">
+            <!-- Configuration Check -->
+            <div id="configCheck" class="config-check">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Firebase Configuration Required</h3>
+                <p>Please configure Firebase with your project details for the order system to work.</p>
+            </div>
+            
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <h3 id="errorTitle">Order Submission Failed</h3>
+                <p id="errorDetails">There was an error submitting your order. Please try again.</p>
+            </div>
+            
+            <!-- Confirmation Message -->
+            <div id="confirmationMessage" class="confirmation-message">
+                <i class="fas fa-check-circle"></i>
+                <h3>Thank you for your order!</h3>
+                <p>Your order has been submitted successfully. You will receive a confirmation email shortly.</p>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="loading">
+                <div class="spinner"></div>
+                <p>Processing your order...</p>
+            </div>
+            
+            <form id="orderForm" class="order-form" enctype="multipart/form-data">
+                <input type="hidden" id="orderId" value="">
                 
                 <div class="form-group animated delay-1">
                     <label for="name">Full Name *</label>
-                    <input type="text" id="name" name="name" class="form-control" required placeholder="John Doe">
+                    <input type="text" id="name" name="name" class="form-control required-field" required placeholder="John Doe">
                 </div>
                 
                 <div class="form-group animated delay-1">
                     <label for="email">Email Address *</label>
-                    <input type="email" id="email" name="email" class="form-control" required placeholder="john@example.com">
+                    <input type="email" id="email" name="email" class="form-control required-field" required placeholder="john@example.com">
                 </div>
                 
                 <div class="form-group animated delay-2">
                     <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" name="phone" class="form-control" required placeholder="+1 (202) 555‑0178">
+                    <input type="tel" id="phone" name="phone" class="form-control required-field" required placeholder="+1 (202) 555‑0178">
                 </div>
                 <div class="form-group animated delay-2">
                     <label for="address">Address</label>
@@ -605,7 +752,7 @@
                 
                 <div class="form-group animated delay-3">
                     <label for="service">Project Type *</label>
-                    <select id="service" name="service" class="form-control" required>
+                    <select id="service" name="service" class="form-control required-field" required>
                         <option value="" disabled selected>Select a project type</option>
                         <option value="Shop Website">Shop Website</option>
                         <option value="School/Educational Website">School/Educational Website</option>
@@ -613,14 +760,13 @@
                         <option value="Portfolio Website">Portfolio Website</option>
                         <option value="Corporate Website">Corporate Website</option>
                         <option value="Landing Page">Landing Page</option>
-                       
                         <option value="Other">Other (please specify in Project Details)</option>
                     </select>
                 </div>
                 
                 <div class="form-group animated delay-3">
                     <label for="package">Service Package *</label>
-                    <select id="package" name="package" class="form-control" required>
+                    <select id="package" name="package" class="form-control required-field" required>
                         <option value="" disabled selected>Select a package</option>
                         <option value="Basic">Basic ($30/page) - Simple design, basic functionality</option>
                         <option value="Advanced">Advanced ($60/page) - Custom design, enhanced features</option>
@@ -630,7 +776,7 @@
                 
                 <div class="form-group animated delay-1">
                     <label for="pages">Estimated Pages/Components *</label>
-                    <select id="pages" name="pages" class="form-control" required>
+                    <select id="pages" name="pages" class="form-control required-field" required>
                         <option value="" disabled selected>Select number of pages</option>
                         <option value="1">1 Page</option>
                         <option value="2-3">2-3 Pages</option>
@@ -643,7 +789,7 @@
                 
                 <div class="form-group animated delay-2">
                     <label for="urgency">Project Urgency *</label>
-                    <select id="urgency" name="urgency" class="form-control" required>
+                    <select id="urgency" name="urgency" class="form-control required-field" required>
                         <option value="" disabled selected>Select timeline</option>
                         <option value="Standard (1-2 weeks)">Standard (1-2 weeks)</option>
                         <option value="Fast (4-7 days)">Fast (4-7 days) (+20% fee)</option>
@@ -652,7 +798,7 @@
                 </div>
                 
                 <div class="price-calculator animated delay-3">
-                    <label for="cost">Total Cost</label>
+                    <label>Total Cost</label>
                     <div class="price-display">
                         <span class="price-label">Total Project Cost:</span>
                         <span class="price-value" id="totalPrice">$0</span>
@@ -663,27 +809,13 @@
                 
                 <div class="form-group animated delay-3 full-width">
                     <label for="details">Project Details *</label>
-                    <textarea id="details" name="details" class="form-control" required placeholder="Please describe your project in detail including features, design preferences, target audience, and any specific requirements..."></textarea>
+                    <textarea id="details" name="details" class="form-control required-field" required placeholder="Please describe your project in detail including features, design preferences, target audience, and any specific requirements..."></textarea>
                     <p class="form-note">The more details you provide, the more accurate our proposal will be.</p>
-                   
                 </div>
                 
-                <div class="form-group animated delay-3 full-width">
-                    <label for="files">Upload Files (Optional)</label>
-                    <div class="file-input-wrapper">
-                        <div class="file-input-button">
-                            <span>Choose files...</span>
-                            <i class="fas fa-paperclip"></i>
-                        </div>
-                        <input type="file" id="files" name="files" multiple>
-                    </div>
-                    <p class="form-note">You can upload design references, documents, or any other relevant files (Max 10MB).</p>
-                    <p class="form-note" style="color: red;">(Note: If your order submission fails due to verification (e.g., 'I’m not a robot'), please refresh the page and try submitting again.)</p>
-                    <p class="form-note" style="color: red;">(Note: Once (i'm not a robot) is  verified, your order has been submitted successfully.)</p>
-                </div>
-                
-                <button type="submit" class="submit-btn animated delay-3">
-                    <i class="fas fa-paper-plane"></i> Submit Order Request
+                <button type="submit" class="submit-btn animated delay-3" id="submitButton" disabled>
+                    <span id="buttonText">Submit Order Request</span>
+                    <div class="button-spinner" id="buttonSpinner"></div>
                 </button>
             </form>
         </section>
@@ -721,7 +853,124 @@
         </section>
     </div>
    
+    <!-- Firebase App (core SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
     <script>
+        // ==============================================
+        // FIREBASE CONFIGURATION - REPLACE WITH YOURS
+        // ==============================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6aBky52tr56fwVnOLGTJIy9dY-0mC6uU",
+            authDomain: "website-orderingsystem.firebaseapp.com",
+            projectId: "website-orderingsystem",
+            storageBucket: "website-orderingsystem.firebasestorage.app",
+            messagingSenderId: "891029940861",
+            appId: "1:891029940861:web:59f6228e84a36144269f14"
+        };
+        
+        // Initialize Firebase
+        let db;
+        try {
+            // Check if configuration is still the default
+            if (firebaseConfig.apiKey === "YOUR_API_KEY" || 
+                firebaseConfig.projectId === "your-project-id") {
+                document.getElementById('configCheck').style.display = 'block';
+                throw new Error("Firebase not configured. Please add your project details.");
+            }
+            
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            
+            // Hide config warning if Firebase initialized successfully
+            document.getElementById('configCheck').style.display = 'none';
+            console.log("Firebase initialized successfully");
+            
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            showError("Configuration Error", "Firebase is not properly configured. Please check your configuration values.");
+        }
+        
+        // Show error message
+        function showError(title, message) {
+            document.getElementById('errorTitle').textContent = title;
+            document.getElementById('errorDetails').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+        
+        // Show popup function
+        function showPopup(title, message, isError = false) {
+            const popupModal = document.getElementById('popupModal');
+            const popupIcon = document.getElementById('popupIcon');
+            const popupTitle = document.getElementById('popupTitle');
+            const popupMessage = document.getElementById('popupMessage');
+            
+            // Set content
+            popupTitle.textContent = title;
+            popupMessage.textContent = message;
+            
+            // Change icon and color for error
+            if (isError) {
+                popupIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+                popupIcon.className = 'popup-icon error';
+            } else {
+                popupIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                popupIcon.className = 'popup-icon success';
+            }
+            
+            // Show popup
+            popupModal.style.display = 'flex';
+        }
+        
+        // Close popup when clicking on X or OK button
+        document.getElementById('popupClose').addEventListener('click', function() {
+            document.getElementById('popupModal').style.display = 'none';
+        });
+        
+        document.getElementById('popupButton').addEventListener('click', function() {
+            document.getElementById('popupModal').style.display = 'none';
+        });
+        
+        // Close popup when clicking outside the content
+        document.getElementById('popupModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+        
+        // NEW: Function to check if all required fields are filled
+        function checkFormValidity() {
+            const requiredFields = document.querySelectorAll('#orderForm [required]');
+            let allFilled = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    allFilled = false;
+                }
+            });
+            
+            // Enable/disable submit button based on form validity
+            document.getElementById('submitButton').disabled = !allFilled;
+            
+            return allFilled;
+        }
+        
+        // NEW: Function to remove red stroke when field has content
+        function handleFieldInput(e) {
+            const field = e.target;
+            if (field.value.trim()) {
+                field.classList.remove('required-field');
+            } else if (field.hasAttribute('required')) {
+                field.classList.add('required-field');
+            }
+            
+            // Check if all required fields are filled
+            checkFormValidity();
+        }
+        
         // Price calculator functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Get form elements
@@ -772,12 +1021,27 @@
                     totalPriceElement.textContent = '$0';
                     if (totalCostInput) totalCostInput.value = '';
                 }
+                
+                // Check form validity after price calculation
+                checkFormValidity();
             }
             
             // Add event listeners
             packageSelect.addEventListener('change', calculatePrice);
             pagesSelect.addEventListener('change', calculatePrice);
             urgencySelect.addEventListener('change', calculatePrice);
+            
+            // NEW: Add input event listeners to all required fields
+            const requiredFields = document.querySelectorAll('#orderForm [required]');
+            requiredFields.forEach(field => {
+                field.addEventListener('input', handleFieldInput);
+                field.addEventListener('change', handleFieldInput);
+                
+                // Initialize with red stroke for empty required fields
+                if (!field.value.trim()) {
+                    field.classList.add('required-field');
+                }
+            });
             
             // File input display
             const fileInput = document.querySelector('input[type="file"]');
@@ -809,25 +1073,118 @@
             window.addEventListener('scroll', animateOnScroll);
             animateOnScroll(); // Trigger once on load
             
-            // Handle form submissions
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    const submitButton = this.querySelector('button[type="submit"]');
-                    if (submitButton) {
-                        const originalHTML = submitButton.getAttribute('data-original-html') || submitButton.innerHTML;
-                        submitButton.setAttribute('data-original-html', originalHTML);
-                        submitButton.disabled = true;
-                        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-                        setTimeout(() => {
-                            submitButton.disabled = false;
-                            submitButton.innerHTML = originalHTML;
-                        }, 7000);
-                    }
-                });
+            // Initial check for form validity
+            checkFormValidity();
+        });
+        
+        // Form submission handler
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Basic validation
+            const requiredFields = document.querySelectorAll('#orderForm [required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = 'red';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '';
+                }
             });
+            
+            if (!isValid) {
+                showError('Missing Information', 'Please fill in all required fields.');
+                return;
+            }
+            
+            // Show button spinner and disable button
+            const submitButton = document.getElementById('submitButton');
+            const buttonText = document.getElementById('buttonText');
+            const buttonSpinner = document.getElementById('buttonSpinner');
+            
+            submitButton.disabled = true;
+            buttonText.textContent = 'Processing...';
+            buttonSpinner.style.display = 'block';
+            
+            // Hide any previous messages
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            try {
+                // Get form values
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    company: document.getElementById('company').value,
+                    service: document.getElementById('service').value,
+                    package: document.getElementById('package').value,
+                    pages: document.getElementById('pages').value,
+                    urgency: document.getElementById('urgency').value,
+                    details: document.getElementById('details').value,
+                    totalCost: document.getElementById('total_cost_input').value,
+                    status: "pending",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // Add order to Firestore
+                const docRef = await db.collection("orders").add(formData);
+                console.log("Order written with ID: ", docRef.id);
+                
+                // Store order ID
+                document.getElementById('orderId').value = docRef.id;
+                
+                // Show success popup
+                showPopup('Order Submitted!', 'Your order has been submitted successfully. We will contact you within 24 hours to discuss your project details.');
+                
+                // Reset form
+                document.getElementById('orderForm').reset();
+                document.getElementById('totalPrice').textContent = '$0';
+                
+                // NEW: Re-add red stroke to required fields after reset
+                const requiredFields = document.querySelectorAll('#orderForm [required]');
+                requiredFields.forEach(field => {
+                    field.classList.add('required-field');
+                });
+                
+                // NEW: Disable submit button again
+                document.getElementById('submitButton').disabled = true;
+                
+            } catch (error) {
+                console.error("Error adding order: ", error);
+                
+                // Show specific error messages
+                if (error.code === 'permission-denied') {
+                    showPopup(
+                        'Permission Denied', 
+                        'Firebase security rules are blocking this operation. Please check your Firestore rules.',
+                        true
+                    );
+                } else if (error.code === 'not-found') {
+                    showPopup(
+                        'Database Not Found', 
+                        'Firestore database might not be created. Please check your Firebase project setup.',
+                        true
+                    );
+                } else {
+                    showPopup(
+                        'Submission Error', 
+                        'There was an error submitting your order: ' + error.message,
+                        true
+                    );
+                }
+            } finally {
+                // Reset button state
+                submitButton.disabled = false;
+                buttonText.textContent = 'Submit Order Request';
+                buttonSpinner.style.display = 'none';
+                
+                // NEW: Check form validity again
+                checkFormValidity();
+            }
         });
     </script>
-   
 </body>
 </html>
