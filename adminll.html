@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Order Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-light: #f8f9fa;
+            --panel-light: #ffffff;
+            --text-light: #1a1a2e;
+            --text-muted-light: #6c757d;
+            --primary: #05cd34;
+            --primary-hover: #3a52d1;
+            --danger: #f44336;
+            --danger-hover: #d32f2f;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --border-light: #e9ecef;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 180ms cubic-bezier(.4, .2, .2, 1);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Basic Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 16px 24px;
+            background: var(--panel-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            height: 48px;
+            width: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .logo-container h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+/* Preloader Styles */
+#preloader {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw; height: 100vh;
+  background: var(--bg-light);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.7s cubic-bezier(.4, .2, .2, 1), visibility 0.7s;
+}
+#preloader.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.preloader-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+.preloader-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+}
+.preloader-circle svg {
+  transform-origin: 50% 50%;
+  animation: rotateCircle 1.2s linear infinite;
+}
+
+        /* Buttons */
+        .btn, .stats-btn, .action-btn, .view-more-btn, .delete-btn {
+            font-family: inherit;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn:hover, .stats-btn:hover, .action-btn:hover, .view-more-btn:hover, .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary, .stats-btn, .view-more-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover, .stats-btn:hover, .view-more-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-danger, .delete-btn {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-danger:hover, .delete-btn:hover {
+            background: var(--danger-hover);
+        }
+
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+
+        /* Admin Menu */
+        .admin-menu-btn {
+            background: var(--bg-light);
+            color: var(--text-muted-light);
+            border: 1px solid var(--border-light);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .admin-menu-btn:hover {
+            background: #f1f3f5;
+            color: var(--text-light);
+        }
+
+        .admin-dropdown {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background: var(--panel-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 280px;
+            z-index: 100;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            display: none;
+            animation: fadeIn 0.2s ease-out;
+        }
+        .admin-dropdown.show { display: block; }
+
+        .admin-dropdown-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        .admin-dropdown-item:not(:last-child) {
+            border-bottom: 1px solid var(--border-light);
+        }
+        .admin-dropdown-item:hover {
+            background: #f8f9fa;
+        }
+        .admin-dropdown-item i {
+            width: 20px;
+            color: var(--text-muted-light);
+        }
+
+        /* Search & Filter */
+        .search-filter {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: center;
+        }
+
+        .search-box, .filter-select {
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            background: var(--panel-light);
+            transition: var(--transition);
+            flex: 1;
+            min-width: 200px;
+        }
+        .search-box:focus, .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        /* Order Cards */
+        .orders-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .order-card {
+            background: var(--panel-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            padding: 20px;
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .order-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .new-badge {
+            position: absolute;
+            top: 45px;
+            right: 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .order-id {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .order-date {
+            font-size: 0.8rem;
+            color: var(--text-muted-light);
+        }
+
+        .order-details {
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            min-width: 90px;
+            color: var(--text-light);
+        }
+
+        .detail-value {
+            color: var(--text-muted-light);
+            word-break: break-all;
+        }
+
+        .email-link {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .email-link:hover {
+            text-decoration: underline;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-pending, .payment-pending {
+            background: #fff8e1;
+            color: #f57f17;
+        }
+
+        .status-in-progress {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-completed, .payment-paid {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+        .order-actions .view-more-btn, .order-actions .delete-btn {
+            flex: 1;
+            padding: 12px;
+        }
+
+        /* Login Page */
+        .login-container {
+            max-width: 420px;
+            margin: 8vh auto;
+            padding: 40px;
+            background: var(--panel-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        .login-container h2 {
+            font-size: 1.75rem;
+            margin-bottom: 12px;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .form-input {
+            padding: 14px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            background: var(--bg-light);
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            color: white;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease-in-out;
+            box-shadow: var(--shadow-lg);
+        }
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .notification.success { background: var(--success); }
+        .notification.error { background: var(--danger); }
+        .notification.info { background: #2196f3; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 26, 46, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .order-modal, .stats-modal {
+            background: var(--panel-light);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+            box-shadow: var(--shadow-lg);
+        }
+        .modal-overlay.active .order-modal, .modal-overlay.active .stats-modal {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #f1f3f5;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .modal-close:hover {
+            background: #e9ecef;
+            color: var(--text-light);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 24px 0 16px 0;
+            color: var(--primary);
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+        .modal-body .section-title:first-child {
+            margin-top: 0;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .info-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .info-table tr:last-child td {
+            border-bottom: none;
+        }
+        .info-table th, .info-table td:first-child {
+            font-weight: 600;
+            color: var(--text-light);
+            padding-right: 24px;
+            width: 200px;
+        }
+        .info-table td:last-child {
+            color: var(--text-muted-light);
+        }
+
+        .status-update-section {
+            padding: 24px;
+            background: #f8f9fa;
+            border-top: 1px solid var(--border-light);
+        }
+        .status-update-row {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .status-select {
+            padding: 10px 14px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: var(--panel-light);
+        }
+        .update-time {
+            font-size: 0.8rem;
+            color: var(--text-muted-light);
+            margin-top: 4px;
+        }
+
+        .download-print-actions {
+            display: flex;
+            gap: 16px;
+            padding: 24px;
+            border-top: 1px solid var(--border-light);
+            background: #f8f9fa;
+        }
+
+        /* Stats Modal */
+        .stats-modal {
+            max-width: 600px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 8px 0;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted-light);
+            font-weight: 500;
+        }
+        .stat-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--text-muted-light);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .stat-delete:hover {
+            color: var(--danger);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+@keyframes rotateCircle {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+        /* Responsive */
+        @media (max-width: 992px) {
+            .logo-container h1 {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                padding: 16px;
+            }
+            .search-filter {
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+            }
+            .orders-container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .status-update-row, .download-print-actions {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+            .info-table, .info-table tbody, .info-table tr, .info-table td {
+                display: block;
+                width: 100%;
+            }
+            .info-table tr {
+                padding: 12px 0;
+                border-bottom: 1px solid var(--border-light);
+            }
+            .info-table td {
+                display: flex;
+                justify-content: space-between;
+                padding: 4px 0;
+                border: none;
+            }
+            .info-table td:first-child {
+                font-weight: 600;
+            }
+            .info-table td:last-child {
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loginPage" class="login-container" style="display: none;">
+        <h2>Admin Login</h2>
+        <form id="loginForm" class="login-form">
+            <input type="email" id="loginEmail" class="form-input" placeholder="Email" required>
+            <div style="position:relative;">
+                <input type="password" id="loginPassword" class="form-input" placeholder="Password" required style="padding-right:40px;">
+                <button type="button" id="togglePassword" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:1.2rem; color:#6c757d;">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+    
+    <!-- Preloader -->
+<!-- Preloader -->
+<div id="preloader">
+  <div class="preloader-content">
+    <div class="preloader-circle">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <defs>
+          <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="cyan"/>
+            <stop offset="50%" stop-color="#4361ee"/>
+            <stop offset="100%" stop-color="purple"/>
+          </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="50" stroke="url(#circleGradient)" stroke-width="12" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+</div>
+    <div id="dashboardPage" style="display: none;">
+        <div class="container">
+            <div class="header">
+                <div class="logo-container">
+                    <img src="https://i.ibb.co/4Rdb5qVG/klklklkl.jpg" alt="Logo" class="logo">
+                    <h1>Mubashir Khan Tech Studio | Website Order System</h1>
+                </div>
+                <div class="auth-section">
+                    <button class="stats-btn" id="statsBtn">
+                        <i class="fas fa-chart-bar"></i> Order History
+                    </button>
+                    <div class="admin-menu">
+                        <button class="admin-menu-btn" id="adminMenuBtn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="admin-dropdown" id="adminDropdown">
+                            <div class="admin-dropdown-item">
+                                <i class="fas fa-user"></i>
+                                <span id="userEmailFull"></span>
+                            </div>
+                            <div class="admin-dropdown-item" id="logoutDropdownBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search-filter">
+                <input type="text" id="searchInput" class="search-box" placeholder="Search by name or email...">
+              
+            </div>
+            
+            <div id="ordersContainer" class="orders-container">
+                <!-- Orders will be displayed here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Detail Modal -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="order-modal">
+            <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <h2>Order Details <span id="modalOrderId"></span></h2>
+                <div class="order-date" id="modalOrderDate"></div>
+            </div>
+            <div class="modal-body">
+                <h3 class="section-title">Client Information</h3>
+                <table class="info-table">
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Name</strong></td>
+                        <td id="modalName">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email</strong></td>
+                        <td><a href="#" id="modalEmail" class="email-link">N/A</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phone</strong></td>
+                        <td id="modalPhone">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address</strong></td>
+                        <td id="modalAddress">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Company/Organization</strong></td>
+                        <td id="modalCompany">N/A</td>
+                    </tr>
+                </table>
+                
+                <h3 class="section-title">Order Information</h3>
+                <table class="info-table">
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Service</strong></td>
+                        <td id="modalService">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Package</strong></td>
+                        <td id="modalPackage">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Project Urgency</strong></td>
+                        <td id="modalUrgency">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Estimated Pages/Components</strong></td>
+                        <td id="modalPages">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Cost</strong></td>
+                        <td id="modalCost">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td id="modalStatusValue">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Payment Status</strong></td>
+                        <td id="modalPaymentStatusValue">N/A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Details</strong></td>
+                        <td id="modalDetails">N/A</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="status-update-section">
+                <h3 class="section-title">Update Status</h3>
+                <div class="status-update-row">
+                    <div>
+                        <label for="modalStatus">Order Status:</label>
+                        <select id="modalStatus" class="status-select">
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <div class="update-time" id="statusUpdateTime"></div>
+                    </div>
+                    <div>
+                        <label for="modalPaymentStatus">Payment Status:</label>
+                        <select id="modalPaymentStatus" class="status-select">
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <div class="update-time" id="paymentUpdateTime"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="download-print-actions">
+                <button id="downloadBtn" class="btn btn-primary">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button id="printBtn" class="btn btn-warning">
+                    <i class="fas fa-print"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Modal -->
+    <div class="modal-overlay" id="statsModal">
+        <div class="stats-modal">
+            <button class="modal-close" id="statsModalClose"><i class="fas fa-times"></i></button>
+            <h2>Order History</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-delete" title="Delete last day orders" data-period="day">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                    <div class="stat-label">Last Day</div>
+                    <div class="stat-value" id="lastDayOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-delete" title="Delete last week orders" data-period="week">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                    <div class="stat-label">Last Week</div>
+                    <div class="stat-value" id="lastWeekOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-delete" title="Delete last month orders" data-period="month">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                    <div class="stat-label">Last Month</div>
+                    <div class="stat-value" id="lastMonthOrders">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6aBky52tr56fwVnOLGTJIy9dY-0mC6uU",
+            authDomain: "website-orderingsystem.firebaseapp.com",
+            projectId: "website-orderingsystem",
+            storageBucket: "website-orderingsystem.firebasestorage.app",
+            messagingSenderId: "891029940861",
+            appId: "1:891029940861:web:59f6228e84a36144269f14"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Initialize jsPDF
+        window.jsPDF = window.jspdf.jsPDF;
+
+        // DOM elements
+        const loginPage = document.getElementById('loginPage');
+        const dashboardPage = document.getElementById('dashboardPage');
+        const loginForm = document.getElementById('loginForm');
+        const userEmailFull = document.getElementById('userEmailFull');
+        const ordersContainer = document.getElementById('ordersContainer');
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const paymentFilter = document.getElementById('paymentFilter');
+        const notification = document.getElementById('notification');
+
+        // Modal elements
+        const orderModal = document.getElementById('orderModal');
+        const modalClose = document.getElementById('modalClose');
+        const statsModal = document.getElementById('statsModal');
+        const statsModalClose = document.getElementById('statsModalClose');
+        const statsBtn = document.getElementById('statsBtn');
+        const adminMenuBtn = document.getElementById('adminMenuBtn');
+        const adminDropdown = document.getElementById('adminDropdown');
+        const logoutDropdownBtn = document.getElementById('logoutDropdownBtn');
+        const modalStatus = document.getElementById('modalStatus');
+        const modalPaymentStatus = document.getElementById('modalPaymentStatus');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const printBtn = document.getElementById('printBtn');
+
+        // Track viewed orders to remove "new" badge
+        let viewedOrders = JSON.parse(localStorage.getItem('viewedOrders') || '[]');
+        let currentOrderId = null;
+        let currentOrderData = null;
+        let allOrders = [];
+        let formattedOrderIds = {}; // Store formatted IDs for consistency
+        let ordersSnapshotUnsubscribe = null; // To manage the snapshot listener
+
+        // Function to generate a formatted order ID
+        function generateFormattedOrderId(originalId) {
+            // If we already have a formatted ID for this order, return it
+            if (formattedOrderIds[originalId]) {
+                return formattedOrderIds[originalId];
+            }
+            
+            // Generate a capital letter (A-Z)
+            const capitalLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+            
+            // Generate 3 random digits
+            const randomDigits = Math.floor(100 + Math.random() * 900);
+            
+            // Create and store the formatted ID
+            const formattedId = `${capitalLetter}${randomDigits}`;
+            formattedOrderIds[originalId] = formattedId;
+            
+            return formattedId;
+        }
+
+        // Function to get or create a formatted order ID from Firestore
+        async function getOrCreateFormattedOrderId(orderId) {
+            try {
+                // Check if we already have a formatted ID in our local cache
+                if (formattedOrderIds[orderId]) {
+                    return formattedOrderIds[orderId];
+                }
+                
+                // Check if the order has a formatted ID stored in Firestore
+                const orderDoc = await db.collection("orders").doc(orderId).get();
+                
+                if (orderDoc.exists && orderDoc.data().formattedId) {
+                    // Use the stored formatted ID
+                    formattedOrderIds[orderId] = orderDoc.data().formattedId;
+                    return formattedOrderIds[orderId];
+                } else {
+                    // Generate a new formatted ID and store it in Firestore
+                    const formattedId = generateFormattedOrderId(orderId);
+                    
+                    // Store the formatted ID in Firestore
+                    await db.collection("orders").doc(orderId).update({
+                        formattedId: formattedId
+                    });
+                    
+                    return formattedId;
+                }
+            } catch (error) {
+                console.error("Error getting formatted order ID:", error);
+                // Fallback to generating a temporary ID
+                return generateFormattedOrderId(orderId);
+            }
+        }
+
+        // Auth state observer
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
+                userEmailFull.textContent = user.email;
+                loginPage.style.display = 'none';
+                dashboardPage.style.display = 'block';
+                setupOrdersListener();
+            } else {
+                // User is signed out
+                loginPage.style.display = 'block';
+                dashboardPage.style.display = 'none';
+                
+                // Clean up the snapshot listener when user logs out
+                if (ordersSnapshotUnsubscribe) {
+                    ordersSnapshotUnsubscribe();
+                    ordersSnapshotUnsubscribe = null;
+                }
+            }
+        });
+
+        // Login form handler
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    showNotification('Login successful!', 'success');
+                })
+                .catch((error) => {
+                    showNotification('Error: ' + error.message, 'error');
+                });
+        });
+
+        // Logout handler
+        logoutDropdownBtn.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                showNotification('Logged out successfully', 'success');
+            }).catch((error) => {
+                showNotification('Error signing out: ' + error.message, 'error');
+            });
+        });
+
+        // Admin menu toggle
+        adminMenuBtn.addEventListener('click', () => {
+            adminDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!adminMenuBtn.contains(e.target) && !adminDropdown.contains(e.target)) {
+                adminDropdown.classList.remove('show');
+            }
+        });
+
+        // Setup orders listener from Firestore
+        function setupOrdersListener() {
+            // If there's already a listener, remove it first
+            if (ordersSnapshotUnsubscribe) {
+                ordersSnapshotUnsubscribe();
+            }
+            
+            ordersSnapshotUnsubscribe = db.collection("orders").orderBy("createdAt", "desc")
+                .onSnapshot(async (querySnapshot) => {
+                    ordersContainer.innerHTML = '';
+                    allOrders = [];
+                    
+                    // Process each order
+                    const orderPromises = [];
+                    querySnapshot.forEach((doc) => {
+                        const order = doc.data();
+                        order.id = doc.id;
+                        allOrders.push(order);
+                        
+                        // Get or create formatted ID for each order
+                        orderPromises.push(
+                            getOrCreateFormattedOrderId(doc.id).then(formattedId => {
+                                displayOrder(doc.id, order, formattedId);
+                            })
+                        );
+                    });
+                    
+                    // Wait for all formatted IDs to be processed
+                    await Promise.all(orderPromises);
+                    
+                    // Calculate order stats
+                    calculateOrderStats(querySnapshot);
+                }, (error) => {
+                    console.error("Error getting orders: ", error);
+                    showNotification('Error loading orders', 'error');
+                });
+        }
+
+        // Display order in the dashboard
+        function displayOrder(orderId, order, formattedOrderId) {
+            // Check if this order is already displayed to prevent duplicates
+            if (document.querySelector(`.order-card[data-order-id="${orderId}"]`)) {
+                return;
+            }
+            
+            const orderCard = document.createElement('div');
+            orderCard.className = 'order-card';
+            orderCard.dataset.orderId = orderId;
+            
+            // Check if order is new - use the viewed field from Firebase
+            const isNewOrder = !order.viewed; // This is the key change
+            
+            // Format date
+            const orderDate = order.createdAt ? order.createdAt.toDate().toLocaleString() : 'Date not available';
+            
+            orderCard.innerHTML = `
+                ${isNewOrder ? '<div class="new-badge" title="New Order">N</div>' : ''}
+
+                <div class="order-header">
+                    <div class="order-id">Order #${formattedOrderId}</div>
+                    <div class="order-date">${orderDate}</div>
+                </div>
+                <div class="order-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value">${order.name || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">
+                            <a href="mailto:${order.email}" class="email-link">${order.email || 'N/A'}</a>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value">
+                            <span class="status-badge status-${order.status || 'pending'}">${order.status || 'pending'}</span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment:</span>
+                        <span class="detail-value">
+                            <span class="status-badge payment-${order.paymentStatus || 'pending'}">${order.paymentStatus || 'pending'}</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="order-actions">
+                    <button class="view-more-btn" data-order-id="${orderId}">
+                        <i class="fas fa-eye"></i> View Details
+                    </button>
+                    <button class="delete-btn" data-order-id="${orderId}">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+            
+            ordersContainer.appendChild(orderCard);
+            
+            // Add event listener for view details button
+            const viewMoreBtn = orderCard.querySelector('.view-more-btn');
+            viewMoreBtn.addEventListener('click', async (e) => {
+                // Mark as viewed in Firebase
+                if (!order.viewed) {
+                    await db.collection("orders").doc(orderId).update({
+                        viewed: true,
+                        viewedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Remove new badge
+                    const newBadge = orderCard.querySelector('.new-badge');
+                    if (newBadge) newBadge.remove();
+                }
+                
+                // Get the formatted ID for this order
+                const formattedId = await getOrCreateFormattedOrderId(orderId);
+                
+                // Show modal with order details
+                showOrderModal(orderId, order, formattedId);
+            });
+            
+            // Add event listener for delete button
+            const deleteBtn = orderCard.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', (e) => {
+                deleteOrder(orderId);
+            });
+        }
+
+        // Show order modal with details
+        async function showOrderModal(orderId, order, formattedOrderId) {
+            currentOrderId = orderId;
+            currentOrderData = order;
+            
+            // If order hasn't been viewed yet, mark it as viewed
+            if (!order.viewed) {
+                await db.collection("orders").doc(orderId).update({
+                    viewed: true,
+                    viewedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update the order data
+                currentOrderData.viewed = true;
+                
+                // Remove the new badge from the order card if it exists
+                const orderCard = document.querySelector(`.order-card[data-order-id="${orderId}"]`);
+                if (orderCard) {
+                    const newBadge = orderCard.querySelector('.new-badge');
+                    if (newBadge) newBadge.remove();
+                }
+            }
+            
+            // Populate modal with order data
+            document.getElementById('modalOrderId').textContent = `#${formattedOrderId}`;
+            document.getElementById('modalOrderDate').textContent = order.createdAt ? order.createdAt.toDate().toLocaleString() : 'Date not available';
+            document.getElementById('modalName').textContent = order.name || 'N/A';
+            document.getElementById('modalEmail').textContent = order.email || 'N/A';
+            document.getElementById('modalEmail').href = `mailto:${order.email}`;
+            document.getElementById('modalPhone').textContent = order.phone || 'N/A';
+            document.getElementById('modalAddress').textContent = order.address || 'N/A';
+            document.getElementById('modalCompany').textContent = order.company || 'N/A';
+            document.getElementById('modalService').textContent = order.service || 'N/A';
+            document.getElementById('modalPackage').textContent = order.package || 'N/A';
+            document.getElementById('modalUrgency').textContent = order.urgency || 'N/A';
+            document.getElementById('modalPages').textContent = order.pages || 'N/A';
+            document.getElementById('modalCost').textContent = `$${order.totalCost || '0'}`;
+            document.getElementById('modalDetails').textContent = order.details || 'N/A';
+            document.getElementById('modalStatusValue').textContent = order.status || 'pending';
+            document.getElementById('modalPaymentStatusValue').textContent = order.paymentStatus || 'pending';
+            
+            // Set current status values
+            modalStatus.value = order.status || 'pending';
+            modalPaymentStatus.value = order.paymentStatus || 'pending';
+            
+            // Set update times
+            document.getElementById('statusUpdateTime').textContent = order.statusUpdatedAt ? 
+                `Updated: ${order.statusUpdatedAt.toDate().toLocaleString()}` : '';
+            document.getElementById('paymentUpdateTime').textContent = order.paymentUpdatedAt ? 
+                `Updated: ${order.paymentUpdatedAt.toDate().toLocaleString()}` : '';
+            
+            // Update download and print buttons based on status
+            updateDownloadPrintButtons(order);
+            
+            // Show modal
+            orderModal.classList.add('active');
+        }
+// Preloader logic
+const preloader = document.getElementById('preloader');
+function hidePreloader() {
+  preloader.classList.add('hide');
+}
+
+// Show preloader on page load
+preloader.style.display = 'flex';
+
+// Wrap Firebase data loading logic
+function fetchFirebaseData() {
+  // Replace with your actual Firebase fetch logic
+  return new Promise((resolve) => {
+    setTimeout(resolve, 5000); // Simulate 2s load
+  });
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  preloader.style.display = 'flex';
+  await fetchFirebaseData(); // Replace with your actual Firebase fetch
+  hidePreloader();
+});
+// If you already have Firebase fetch logic, call hidePreloader() after data loads
+// If you already have Firebase
+        // Update download and print buttons based on status
+        function updateDownloadPrintButtons(order) {
+            // Update download button
+            if (order.downloadStatus) {
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Again';
+            } else {
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
+            }
+            
+            // Update print button
+            if (order.printStatus) {
+                printBtn.innerHTML = '<i class="fas fa-print"></i> Print Again';
+            } else {
+                printBtn.innerHTML = '<i class="fas fa-print"></i> Print';
+            }
+        }
+
+        // Close modal
+        modalClose.addEventListener('click', () => {
+            orderModal.classList.remove('active');
+        });
+
+        // Show stats modal
+        statsBtn.addEventListener('click', () => {
+            statsModal.classList.add('active');
+        });
+
+        // Close stats modal
+        statsModalClose.addEventListener('click', () => {
+            statsModal.classList.remove('active');
+        });
+
+        // Status change handlers
+        modalStatus.addEventListener('change', () => {
+            updateOrderStatus(currentOrderId, modalStatus.value, null);
+        });
+
+        modalPaymentStatus.addEventListener('change', () => {
+            updateOrderStatus(currentOrderId, null, modalPaymentStatus.value);
+        });
+
+        // Update order status
+        function updateOrderStatus(orderId, status, paymentStatus) {
+            const updateData = {};
+            
+            if (status) {
+                updateData.status = status;
+                updateData.statusUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
+            }
+            
+            if (paymentStatus) {
+                updateData.paymentStatus = paymentStatus;
+                updateData.paymentUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
+            }
+            
+            db.collection("orders").doc(orderId).update(updateData)
+                .then(() => {
+                    showNotification('Order status updated successfully', 'success');
+                    // Refresh the modal to show updated times
+                    db.collection("orders").doc(orderId).get()
+                        .then(doc => {
+                            if (doc.exists) {
+                                getOrCreateFormattedOrderId(orderId).then(formattedId => {
+                                    showOrderModal(orderId, doc.data(), formattedId);
+                                });
+                            }
+                        });
+                })
+                .catch((error) => {
+                    showNotification('Error updating order status: ' + error.message, 'error');
+                });
+        }
+
+        // Delete order
+        function deleteOrder(orderId) {
+            if (confirm('Are you sure you want to delete this order?')) {
+                db.collection("orders").doc(orderId).delete()
+                    .then(() => {
+                        showNotification('Order deleted successfully', 'success');
+                        // Remove from formatted IDs
+                        delete formattedOrderIds[orderId];
+                    }).catch((error) => {
+                        showNotification('Error deleting order: ' + error.message, 'error');
+                    });
+            }
+        }
+
+        // Delete orders by period
+        function deleteOrdersByPeriod(period) {
+            const now = new Date();
+            let cutoffDate;
+            
+            if (period === 'day') {
+                cutoffDate = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+            } else if (period === 'week') {
+                cutoffDate = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
+            } else if (period === 'month') {
+                cutoffDate = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+            }
+            
+            if (confirm(`Are you sure you want to delete all orders from the last ${period}?`)) {
+                const batch = db.batch();
+                let deleteCount = 0;
+                
+                allOrders.forEach(order => {
+                    if (order.createdAt && order.createdAt.toDate() >= cutoffDate) {
+                        batch.delete(db.collection("orders").doc(order.id));
+                        deleteCount++;
+                        // Remove from formatted IDs
+                        delete formattedOrderIds[order.id];
+                    }
+                });
+                
+                if (deleteCount > 0) {
+                    batch.commit().then(() => {
+                        showNotification(`Deleted ${deleteCount} orders from the last ${period}`, 'success');
+                    }).catch(error => {
+                        showNotification('Error deleting orders: ' + error.message, 'error');
+                    });
+                } else {
+                    showNotification('No orders found to delete', 'info');
+                }
+            }
+        }
+
+        // Calculate order statistics
+        function calculateOrderStats(querySnapshot) {
+            const now = new Date();
+            const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+            const oneWeekAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
+            const oneMonthAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+            
+            let lastDayCount = 0;
+            let lastWeekCount = 0;
+            let lastMonthCount = 0;
+            
+            querySnapshot.forEach((doc) => {
+                const order = doc.data();
+                if (order.createdAt) {
+                    const orderDate = order.createdAt.toDate();
+                    
+                    if (orderDate >= oneDayAgo) lastDayCount++;
+                    if (orderDate >= oneWeekAgo) lastWeekCount++;
+                    if (orderDate >= oneMonthAgo) lastMonthCount++;
+                }
+            });
+            
+            document.getElementById('lastDayOrders').textContent = lastDayCount;
+            document.getElementById('lastWeekOrders').textContent = lastWeekCount;
+            document.getElementById('lastMonthOrders').textContent = lastMonthCount;
+            
+            // Add event listeners for delete buttons in stats
+            document.querySelectorAll('.stat-delete').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteOrdersByPeriod(button.dataset.period);
+                });
+            });
+        }
+
+        // Download button handler
+        downloadBtn.addEventListener('click', async () => {
+            // Get the formatted ID for this order
+            const formattedOrderId = await getOrCreateFormattedOrderId(currentOrderId);
+            generatePDF(currentOrderId, currentOrderData, formattedOrderId);
+            
+            // Update download status in Firestore
+            db.collection("orders").doc(currentOrderId).update({
+                downloadStatus: true,
+                downloadUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                showNotification('Download status updated', 'success');
+                // Update the button text
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Again';
+                currentOrderData.downloadStatus = true;
+            })
+            .catch((error) => {
+                showNotification('Error updating download status: ' + error.message, 'error');
+            });
+        });
+
+        // Print button handler - now generates PDF instead of printing current page
+        printBtn.addEventListener('click', async () => {
+            // Get the formatted ID for this order
+            const formattedOrderId = await getOrCreateFormattedOrderId(currentOrderId);
+            generatePDF(currentOrderId, currentOrderData, formattedOrderId, true);
+            
+            // Update print status in Firestore
+            db.collection("orders").doc(currentOrderId).update({
+                printStatus: true,
+                printUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                showNotification('Print status updated', 'success');
+                // Update the button text
+                printBtn.innerHTML = '<i class="fas fa-print"></i> Print Again';
+                currentOrderData.printStatus = true;
+            })
+            .catch((error) => {
+                showNotification('Error updating print status: ' + error.message, 'error');
+            });
+        });
+
+        // Generate PDF for download or printing with proper line spacing
+        function generatePDF(orderId, orderData, formattedOrderId, forPrint = false) {
+            const doc = new jsPDF();
+            const pageHeight = doc.internal.pageSize.height;
+            const pageWidth = doc.internal.pageSize.width;
+            const margin = 14;
+            let yPosition = margin;
+            let currentPage = 1;
+            const totalPages = []; // Track total pages for footer
+            
+            // Add logo at the top
+            const logoUrl = 'https://i.ibb.co/4Rdb5qVG/klklklkl.jpg';
+            
+            // Add logo using a workaround for CORS issues
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = logoUrl;
+            
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                const dataURL = canvas.toDataURL('image/jpeg');
+                
+                // Function to add header to each page
+                const addHeader = () => {
+                    // Add logo to PDF
+                    doc.addImage(dataURL, 'JPEG', margin, yPosition, 40, 40);
+                    
+                    // Add company name and details
+                    doc.setFontSize(22);
+                    doc.setTextColor(40, 40, 40);
+                    doc.text("Mubashir Khan Tech Studio", pageWidth / 2, yPosition + 15, { align: "center" });
+                    doc.setFontSize(12);
+                    doc.setTextColor(100, 100, 100);
+                    doc.text("Website Order System", pageWidth / 2, yPosition + 22, { align: "center" });
+                    
+                    // Add order details header
+                    doc.setFontSize(16);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(`Order Details - #${formattedOrderId}`, margin, yPosition + 40);
+                    
+                    // Add order date
+                    doc.setFontSize(10);
+                    doc.setTextColor(100, 100, 100);
+                    const orderDate = orderData.createdAt ? orderData.createdAt.toDate().toLocaleString() : 'Date not available';
+                    doc.text(`Order Date: ${orderDate}`, margin, yPosition + 47);
+                    
+                    yPosition += 55;
+                };
+                
+                // Function to add footer to each page
+                const addFooter = () => {
+                    const downloadDate = new Date().toLocaleString();
+                    doc.setFontSize(8);
+                    doc.setTextColor(150, 150, 150);
+                    doc.text(`Page ${currentPage} of ${totalPages.length} | Mubashir Khan Tech Studio | Printed on: ${downloadDate}`, margin, pageHeight - 10);
+                };
+                
+                // Function to check if we need a new page
+                const checkPageBreak = (requiredHeight) => {
+                    if (yPosition + requiredHeight > pageHeight - margin) {
+                        addFooter();
+                        doc.addPage();
+                        currentPage++;
+                        yPosition = margin;
+                        addHeader();
+                        totalPages.push(currentPage);
+                        return true;
+                    }
+                    return false;
+                };
+                
+                // Add header to first page
+                totalPages.push(currentPage);
+                addHeader();
+                
+                // Add client information table
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text("Client Information", margin, yPosition);
+                yPosition += 7;
+                
+                const clientData = [
+                    ["Name:", orderData.name || 'N/A'],
+                    ["Email:", orderData.email || 'N/A'],
+                    ["Phone:", orderData.phone || 'N/A'],
+                    ["Address:", orderData.address || 'N/A'],
+                    ["Company/Organization:", orderData.company || 'N/A']
+                ];
+                
+                // Calculate table height
+                const tableRowHeight = 7;
+                const tableHeaderHeight = 7;
+                const tableHeight = (clientData.length + 1) * tableRowHeight + tableHeaderHeight;
+                
+                checkPageBreak(tableHeight + 10);
+                
+                doc.autoTable({
+                    startY: yPosition,
+                    head: [['Field', 'Value']],
+                    body: clientData,
+                    theme: 'grid',
+                    headStyles: { fillColor: [67, 97, 238] },
+                    styles: { fontSize: 10, cellPadding: 2 },
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 60 } },
+                    margin: { left: margin, right: margin }
+                });
+                
+                yPosition = doc.lastAutoTable.finalY + 10;
+                
+                // Add order information table
+                checkPageBreak(20);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text("Order Information", margin, yPosition);
+                yPosition += 7;
+                
+                const orderInfoData = [
+                    ["Service:", orderData.service || 'N/A'],
+                    ["Package:", orderData.package || 'N/A'],
+                    ["Project Urgency:", orderData.urgency || 'N/A'],
+                    ["Estimated Pages/Components:", orderData.pages || 'N/A'],
+                    ["Total Cost:", `$${orderData.totalCost || '0'}`],
+                    ["Status:", orderData.status || 'pending'],
+                    ["Payment Status:", orderData.paymentStatus || 'pending']
+                ];
+                
+                // Calculate table height
+                const orderTableHeight = (orderInfoData.length + 1) * tableRowHeight + tableHeaderHeight;
+                
+                checkPageBreak(orderTableHeight + 10);
+                
+                doc.autoTable({
+                    startY: yPosition,
+                    head: [['Field', 'Value']],
+                    body: orderInfoData,
+                    theme: 'grid',
+                    headStyles: { fillColor: [67, 97, 238] },
+                    styles: { fontSize: 10, cellPadding: 2 },
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 80 } },
+                    margin: { left: margin, right: margin }
+                });
+                
+                yPosition = doc.lastAutoTable.finalY + 15;
+                
+                // Add a new page for project details
+                checkPageBreak(30);
+                doc.addPage();
+                currentPage++;
+                totalPages.push(currentPage);
+                yPosition = margin;
+                
+                // Add header for project details page
+                doc.addImage(dataURL, 'JPEG', margin, yPosition, 40, 40);
+                doc.setFontSize(22);
+                doc.setTextColor(40, 40, 40);
+                doc.text("Mubashir Khan Tech Studio", pageWidth / 2, yPosition + 15, { align: "center" });
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text("Website Order System", pageWidth / 2, yPosition + 22, { align: "center" });
+                doc.setFontSize(16);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Project Details - #${formattedOrderId}`, margin, yPosition + 40);
+                
+                yPosition += 50;
+                
+                // Add project details section
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text("Project Details", margin, yPosition);
+                yPosition += 7;
+                
+                // Split details into multiple lines if too long
+                const details = orderData.details || 'No details provided';
+                const splitDetails = doc.splitTextToSize(details, pageWidth - 2 * margin);
+                
+                // Calculate height needed for project details
+                const lineHeight = 5; // Reduced line height for better spacing
+                
+                // Check if we need multiple pages for project details
+                let detailsPage = 1;
+                let detailsY = yPosition;
+                let detailsIndex = 0;
+                
+                while (detailsIndex < splitDetails.length) {
+                    // Check if we need a new page
+                    if (detailsY + lineHeight > pageHeight - margin) {
+                        addFooter();
+                        doc.addPage();
+                        currentPage++;
+                        totalPages.push(currentPage);
+                        detailsPage++;
+                        yPosition = margin;
+                        detailsY = margin + 15;
+                        
+                        // Add header for new page
+                        doc.addImage(dataURL, 'JPEG', margin, yPosition, 40, 40);
+                        doc.setFontSize(22);
+                        doc.setTextColor(40, 40, 40);
+                        doc.text("Mubashir Khan Tech Studio", pageWidth / 2, yPosition + 15, { align: "center" });
+                        doc.setFontSize(12);
+                        doc.setTextColor(100, 100, 100);
+                        doc.text("Website Order System", pageWidth / 2, yPosition + 22, { align: "center" });
+                        doc.setFontSize(16);
+                        doc.setTextColor(0, 0, 0);
+                        doc.text(`Project Details (Cont.) - #${formattedOrderId}`, margin, yPosition + 40);
+                        
+                        yPosition += 45;
+                        detailsY = yPosition;
+                    }
+                    
+                    // Add line of text
+                    doc.setFontSize(10);
+                    doc.setTextColor(80, 80, 80);
+                    doc.text(splitDetails[detailsIndex], margin, detailsY);
+                    
+                    detailsY += lineHeight;
+                    detailsIndex++;
+                }
+                
+                yPosition = detailsY + 10;
+                
+                // Add footer to the last page
+                addFooter();
+                
+                if (forPrint) {
+                    // For printing, open the PDF in a new window
+                    const pdfBlob = doc.output('blob');
+                    const pdfUrl = URL.createObjectURL(pdfBlob);
+                    window.open(pdfUrl, '_blank');
+                } else {
+                    // For download, save the PDF
+                    doc.save(`order_${formattedOrderId}.pdf`);
+                }
+            };
+            
+            img.onerror = function() {
+                // If logo fails to load, proceed without it
+                // Similar logic as above but without the logo
+                // This is a simplified version for error case
+                
+                const doc = new jsPDF();
+                
+                // Add header
+                doc.setFontSize(22);
+                doc.setTextColor(40, 40, 40);
+                doc.text("Mubashir Khan Tech Studio", 105, 25, { align: "center" });
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text("Website Order System", 105, 32, { align: "center" });
+                
+                // Add order details header
+                doc.setFontSize(16);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Order Details - #${formattedOrderId}`, 14, 45);
+                
+                // Add order date
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                const orderDate = orderData.createdAt ? orderData.createdAt.toDate().toLocaleString() : 'Date not available';
+                doc.text(`Order Date: ${orderDate}`, 14, 52);
+                
+                // Add client information table
+                doc.autoTable({
+                    startY: 60,
+                    head: [['Field', 'Value']],
+                    body: [
+                        ["Name:", orderData.name || 'N/A'],
+                        ["Email:", orderData.email || 'N/A'],
+                        ["Phone:", orderData.phone || 'N/A'],
+                        ["Address:", orderData.address || 'N/A'],
+                        ["Company/Organization:", orderData.company || 'N/A']
+                    ],
+                    theme: 'grid',
+                    headStyles: { fillColor: [67, 97, 238] },
+                    styles: { fontSize: 10, cellPadding: 2 },
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 60 } }
+                });
+                
+                // Add order information table
+                doc.autoTable({
+                    startY: doc.lastAutoTable.finalY + 15,
+                    head: [['Field', 'Value']],
+                    body: [
+                        ["Service:", orderData.service || 'N/A'],
+                        ["Package:", orderData.package || 'N/A'],
+                        ["Project Urgency:", orderData.urgency || 'N/A'],
+                        ["Estimated Pages/Components:", orderData.pages || 'N/A'],
+                        ["Total Cost:", `$${orderData.totalCost || '0'}`],
+                        ["Status:", orderData.status || 'pending'],
+                        ["Payment Status:", orderData.paymentStatus || 'pending']
+                    ],
+                    theme: 'grid',
+                    headStyles: { fillColor: [67, 97, 238] },
+                    styles: { fontSize: 10, cellPadding: 2 },
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 80 } }
+                });
+                
+                // Add a new page for project details
+                doc.addPage();
+                
+                // Add header again on the second page
+                doc.setFontSize(22);
+                doc.setTextColor(40, 40, 40);
+                doc.text("Mubashir Khan Tech Studio", 105, 25, { align: "center" });
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text("Website Order System", 105, 32, { align: "center" });
+                
+                // Add project details header on second page
+                doc.setFontSize(16);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Project Details - #${formattedOrderId}`, 14, 60);
+                
+                // Add project details section
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text("Project Details", 14, 75);
+                
+                // Split details into multiple lines if too long
+                const details = orderData.details || 'No details provided';
+                const splitDetails = doc.splitTextToSize(details, 180);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(80, 80, 80);
+                
+                // Add details with proper line spacing
+                let detailsY = 85;
+                const lineHeight = 5; // Reduced line height for better spacing
+                
+                for (let i = 0; i < splitDetails.length; i++) {
+                    doc.text(splitDetails[i], 14, detailsY);
+                    detailsY += lineHeight;
+                }
+                
+                // Add footer on second page
+                const downloadDate = new Date().toLocaleString();
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text(`Page 2 of 2 | Mubashir Khan Tech Studio | Printed on: ${downloadDate}`, 14, doc.internal.pageSize.height - 10);
+                
+                if (forPrint) {
+                    const pdfBlob = doc.output('blob');
+                    const pdfUrl = URL.createObjectURL(pdfBlob);
+                    window.open(pdfUrl, '_blank');
+                } else {
+                    doc.save(`order_${formattedOrderId}.pdf`);
+                }
+            };
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 3000);
+        }
+
+        // Search and filter functionality
+        searchInput.addEventListener('input', filterOrders);
+        statusFilter.addEventListener('change', filterOrders);
+        paymentFilter.addEventListener('change', filterOrders);
+
+        function filterOrders() {
+            const searchText = searchInput.value.toLowerCase();
+            const statusValue = statusFilter.value;
+            const paymentValue = paymentFilter.value;
+            
+            const orderCards = document.querySelectorAll('.order-card');
+            
+            orderCards.forEach(card => {
+                const name = card.querySelector('.detail-row:nth-child(1) .detail-value').textContent.toLowerCase();
+                const email = card.querySelector('.detail-row:nth-child(2) .detail-value').textContent.toLowerCase();
+                const status = card.querySelector('.status-badge').textContent.toLowerCase();
+                const paymentStatus = card.querySelector('.payment-paid, .payment-pending').textContent.toLowerCase();
+                
+                const nameMatch = name.includes(searchText);
+                const emailMatch = email.includes(searchText);
+                const statusMatch = statusValue === 'all' || status === statusValue;
+                const paymentMatch = paymentValue === 'all' || paymentStatus === paymentValue;
+                
+                if ((nameMatch || emailMatch) && statusMatch && paymentMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Show/hide password toggle
+const loginPassword = document.getElementById('loginPassword');
+const togglePassword = document.getElementById('togglePassword');
+togglePassword.addEventListener('click', function() {
+    const type = loginPassword.type === 'password' ? 'text' : 'password';
+    loginPassword.type = type;
+    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+});
+    </script>
+</body>
+</html>
