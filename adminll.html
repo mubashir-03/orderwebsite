@@ -1009,12 +1009,12 @@
         <p>Please enter the 6-digit security code to access the dashboard</p>
         <form id="securityCodeForm" class="security-code-form">
             <div class="code-input-container">
-                <input type="tel" class="code-digit" maxlength="1" data-index="0" inputmode="numeric" pattern="[0-9]">
-                <input type="tel" class="code-digit" maxlength="1" data-index="1" inputmode="numeric" pattern="[0-9]">
-                <input type="tel" class="code-digit" maxlength="1" data-index="2" inputmode="numeric" pattern="[0-9]">
-                <input type="tel" class="code-digit" maxlength="1" data-index="3" inputmode="numeric" pattern="[0-9]">
-                <input type="tel" class="code-digit" maxlength="1" data-index="4" inputmode="numeric" pattern="[0-9]">
-                <input type="tel" class="code-digit" maxlength="1" data-index="5" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="code-digit" maxlength="1" data-index="0" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                <input type="tel" class="code-digit" maxlength="1" data-index="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                <input type="tel" class="code-digit" maxlength="1" data-index="2" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                <input type="tel" class="code-digit" maxlength="1" data-index="3" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                <input type="tel" class="code-digit" maxlength="1" data-index="4" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                <input type="tel" class="code-digit" maxlength="1" data-index="5" inputmode="numeric" pattern="[0-9]" autocomplete="off">
             </div>
             <div class="security-error" id="securityError">Invalid security code. Please try again.</div>
             <button type="submit" class="btn btn-primary">Verify Code</button>
@@ -1473,114 +1473,193 @@
         document.addEventListener('DOMContentLoaded', () => {
             const codeInputs = document.querySelectorAll('.code-digit');
             
-            codeInputs.forEach((input, index) => {
-                // Mobile-specific enhancements
-                input.addEventListener('focus', (e) => {
-                    // Clear error state on focus
-                    input.classList.remove('error');
-                    document.getElementById('securityError').classList.remove('show');
-                    
-                    // Select all text on focus for better mobile UX
-                    setTimeout(() => {
-                        input.select();
-                    }, 10);
+            // Clear all inputs function
+            function clearAllInputs() {
+                codeInputs.forEach(input => {
+                    input.value = '';
+                    input.classList.remove('filled', 'error');
                 });
+            }
+            
+            // Focus input function
+            function focusInput(index) {
+                if (index >= 0 && index < codeInputs.length) {
+                    codeInputs[index].focus();
+                    // Small delay to ensure focus works on mobile
+                    setTimeout(() => {
+                        codeInputs[index].select();
+                    }, 50);
+                }
+            }
+            
+            // Check if all inputs are filled
+            function checkAllFilled() {
+                const allFilled = Array.from(codeInputs).every(input => input.value !== '');
+                if (allFilled) {
+                    setTimeout(() => {
+                        verifySecurityCode();
+                    }, 200);
+                }
+            }
+            
+            codeInputs.forEach((input, index) => {
+                // Remove browser autocomplete and suggestions
+                input.setAttribute('autocomplete', 'off');
+                input.setAttribute('autocorrect', 'off');
+                input.setAttribute('autocapitalize', 'off');
                 
+                // Input event - handle typing
                 input.addEventListener('input', (e) => {
-                    const value = e.target.value;
+                    let value = e.target.value;
                     
-                    // Only allow numbers
-                    if (!/^\d$/.test(value) && value !== '') {
-                        e.target.value = '';
-                        return;
+                    // Remove any non-numeric characters
+                    value = value.replace(/[^0-9]/g, '');
+                    
+                    // If multiple digits, take only the first one
+                    if (value.length > 1) {
+                        value = value.charAt(0);
                     }
                     
-                    if (value !== '') {
+                    // Set the cleaned value
+                    input.value = value;
+                    
+                    // Update visual state
+                    if (value) {
                         input.classList.add('filled');
+                        input.classList.remove('error');
                         
-                        // Move to next input
+                        // Move to next input if not last
                         if (index < codeInputs.length - 1) {
-                            codeInputs[index + 1].focus();
+                            focusInput(index + 1);
                         } else {
-                            // All digits entered, verify automatically
-                            setTimeout(() => {
-                                verifySecurityCode();
-                            }, 100);
+                            // Last input filled, check if all are complete
+                            input.blur();
+                            checkAllFilled();
                         }
                     } else {
                         input.classList.remove('filled');
                     }
                 });
                 
+                // Keydown event - handle special keys
                 input.addEventListener('keydown', (e) => {
-                    // Handle backspace
-                    if (e.key === 'Backspace' && input.value === '' && index > 0) {
-                        codeInputs[index - 1].focus();
-                        codeInputs[index - 1].value = '';
-                        codeInputs[index - 1].classList.remove('filled');
+                    const key = e.key;
+                    
+                    // Allow: backspace, delete, tab, escape, enter, arrow keys
+                    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+                        // Handle backspace
+                        if (key === 'Backspace') {
+                            if (input.value === '' && index > 0) {
+                                // Move to previous input and clear it
+                                codeInputs[index - 1].value = '';
+                                codeInputs[index - 1].classList.remove('filled');
+                                focusInput(index - 1);
+                            }
+                        }
+                        // Handle arrow keys
+                        else if (key === 'ArrowLeft' && index > 0) {
+                            focusInput(index - 1);
+                        }
+                        else if (key === 'ArrowRight' && index < codeInputs.length - 1) {
+                            focusInput(index + 1);
+                        }
+                        return;
                     }
                     
-                    // Handle arrow keys
-                    if (e.key === 'ArrowLeft' && index > 0) {
-                        codeInputs[index - 1].focus();
-                    }
-                    if (e.key === 'ArrowRight' && index < codeInputs.length - 1) {
-                        codeInputs[index + 1].focus();
-                    }
-                    
-                    // Prevent non-numeric input on mobile
-                    if (!/\d|Backspace|Delete|ArrowLeft|ArrowRight|Tab/.test(e.key)) {
+                    // Allow only numbers 0-9
+                    if (!/^[0-9]$/.test(key)) {
                         e.preventDefault();
+                        return;
                     }
                 });
                 
-                // Enhanced paste handling for mobile
+                // Focus event
+                input.addEventListener('focus', (e) => {
+                    input.classList.remove('error');
+                    // Clear error message
+                    const errorDiv = document.getElementById('securityError');
+                    if (errorDiv) {
+                        errorDiv.classList.remove('show');
+                    }
+                    
+                    // Select all text for easy replacement
+                    setTimeout(() => {
+                        input.select();
+                    }, 10);
+                });
+                
+                // Paste event
                 input.addEventListener('paste', (e) => {
                     e.preventDefault();
                     const pastedData = e.clipboardData.getData('text');
-                    const digits = pastedData.replace(/\D/g, '').slice(0, 6);
+                    const digits = pastedData.replace(/[^0-9]/g, '').slice(0, 6);
                     
-                    digits.split('').forEach((digit, i) => {
-                        if (i < codeInputs.length) {
-                            codeInputs[i].value = digit;
-                            codeInputs[i].classList.add('filled');
-                        }
-                    });
+                    // Clear all inputs first
+                    clearAllInputs();
                     
-                    if (digits.length === 6) {
-                        setTimeout(() => {
-                            verifySecurityCode();
-                        }, 100);
+                    // Fill inputs with pasted digits
+                    for (let i = 0; i < digits.length && i < codeInputs.length; i++) {
+                        codeInputs[i].value = digits[i];
+                        codeInputs[i].classList.add('filled');
+                    }
+                    
+                    // Focus next empty input or verify if complete
+                    if (digits.length >= 6) {
+                        codeInputs[5].blur();
+                        checkAllFilled();
                     } else if (digits.length > 0) {
-                        const nextIndex = Math.min(digits.length, codeInputs.length - 1);
-                        codeInputs[nextIndex].focus();
+                        focusInput(digits.length);
                     }
                 });
                 
-                // Better mobile touch handling
-                input.addEventListener('touchstart', (e) => {
-                    // Prevent zoom on touch for better UX
-                    e.preventDefault();
-                    input.focus();
-                }, { passive: false });
+                // Click event for mobile
+                input.addEventListener('click', (e) => {
+                    // Ensure input is focused and selected
+                    setTimeout(() => {
+                        input.focus();
+                        input.select();
+                    }, 10);
+                });
             });
             
-            // Auto-focus first input when security page is shown
+            // Auto-focus when security page becomes visible
+            const securityCodePage = document.getElementById('securityCodePage');
+            
+            // Function to initialize focus
+            function initializeFocus() {
+                if (securityCodePage && securityCodePage.style.display === 'block') {
+                    clearAllInputs();
+                    setTimeout(() => {
+                        focusInput(0);
+                    }, 100);
+                }
+            }
+            
+            // Observer for when the page becomes visible
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
-                    if (mutation.target.id === 'securityCodePage' && 
-                        mutation.target.style.display === 'block') {
-                        setTimeout(() => {
-                            codeInputs[0].focus();
-                        }, 100);
+                    if (mutation.type === 'attributes' && 
+                        mutation.attributeName === 'style' &&
+                        mutation.target.id === 'securityCodePage') {
+                        initializeFocus();
                     }
                 });
             });
             
-            const securityCodePage = document.getElementById('securityCodePage');
-            observer.observe(securityCodePage, { 
-                attributes: true, 
-                attributeFilter: ['style'] 
+            if (securityCodePage) {
+                observer.observe(securityCodePage, { 
+                    attributes: true, 
+                    attributeFilter: ['style'] 
+                });
+            }
+            
+            // Also trigger on window focus (when user returns to app)
+            window.addEventListener('focus', () => {
+                if (securityCodePage && securityCodePage.style.display === 'block') {
+                    setTimeout(() => {
+                        focusInput(0);
+                    }, 100);
+                }
             });
         });
 
