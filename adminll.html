@@ -528,18 +528,23 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow-lg);
             text-align: center;
+            /* Mobile optimizations */
+            position: relative;
+            box-sizing: border-box;
         }
         
         .security-code-container h2 {
             font-size: 1.75rem;
             margin-bottom: 12px;
             color: var(--text-light);
+            line-height: 1.2;
         }
         
         .security-code-container p {
             color: var(--text-muted-light);
             margin-bottom: 32px;
             font-size: 0.95rem;
+            line-height: 1.5;
         }
         
         .code-input-container {
@@ -547,6 +552,7 @@
             justify-content: center;
             gap: 12px;
             margin-bottom: 32px;
+            align-items: center;
         }
         
         .code-digit {
@@ -560,6 +566,14 @@
             background: var(--bg-light);
             transition: var(--transition);
             outline: none;
+            /* Mobile optimizations */
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+            appearance: none;
+            /* Better mobile interaction */
+            box-sizing: border-box;
+            min-width: 50px;
+            cursor: pointer;
         }
         
         .code-digit:focus {
@@ -601,6 +615,107 @@
         
         .security-error.show {
             opacity: 1;
+        }
+
+        /* Mobile specific improvements for security code */
+        @media (max-width: 768px) {
+            .security-code-container {
+                margin: 5vh auto;
+                padding: 30px 20px;
+                max-width: 90vw;
+                min-height: auto;
+                /* Prevent zoom on input focus */
+                -webkit-text-size-adjust: 100%;
+            }
+            
+            .code-input-container {
+                gap: 8px;
+                margin-bottom: 24px;
+            }
+            
+            .code-digit {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+                /* Ensure numeric keyboard on mobile */
+                -webkit-user-select: none;
+                user-select: none;
+                /* Prevent zoom on focus */
+                font-size: 16px;
+                /* Better touch handling */
+                touch-action: manipulation;
+            }
+            
+            .security-code-container h2 {
+                font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+            
+            .security-code-container p {
+                font-size: 0.9rem;
+                margin-bottom: 24px;
+                line-height: 1.4;
+            }
+            
+            .security-code-form .btn {
+                padding: 16px 24px;
+                font-size: 1rem;
+                margin-top: 8px;
+            }
+            
+            .security-error {
+                font-size: 0.85rem;
+                margin-top: 12px;
+            }
+        }
+
+        /* Extra small phones */
+        @media (max-width: 480px) {
+            .security-code-container {
+                margin: 3vh auto;
+                padding: 25px 15px;
+                max-width: 95vw;
+            }
+            
+            .code-input-container {
+                gap: 6px;
+            }
+            
+            .code-digit {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .security-code-container h2 {
+                font-size: 1.3rem;
+            }
+            
+            .security-code-container p {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .security-code-container {
+                margin: 2vh auto;
+                padding: 20px;
+                max-height: 90vh;
+            }
+            
+            .code-input-container {
+                margin-bottom: 20px;
+            }
+            
+            .security-code-container h2 {
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+            
+            .security-code-container p {
+                margin-bottom: 16px;
+            }
         }
 
         /* Notification */
@@ -894,12 +1009,12 @@
         <p>Please enter the 6-digit security code to access the dashboard</p>
         <form id="securityCodeForm" class="security-code-form">
             <div class="code-input-container">
-                <input type="text" class="code-digit" maxlength="1" data-index="0">
-                <input type="text" class="code-digit" maxlength="1" data-index="1">
-                <input type="text" class="code-digit" maxlength="1" data-index="2">
-                <input type="text" class="code-digit" maxlength="1" data-index="3">
-                <input type="text" class="code-digit" maxlength="1" data-index="4">
-                <input type="text" class="code-digit" maxlength="1" data-index="5">
+                <input type="tel" class="code-digit" maxlength="1" data-index="0" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="code-digit" maxlength="1" data-index="1" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="code-digit" maxlength="1" data-index="2" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="code-digit" maxlength="1" data-index="3" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="code-digit" maxlength="1" data-index="4" inputmode="numeric" pattern="[0-9]">
+                <input type="tel" class="code-digit" maxlength="1" data-index="5" inputmode="numeric" pattern="[0-9]">
             </div>
             <div class="security-error" id="securityError">Invalid security code. Please try again.</div>
             <button type="submit" class="btn btn-primary">Verify Code</button>
@@ -1359,6 +1474,18 @@
             const codeInputs = document.querySelectorAll('.code-digit');
             
             codeInputs.forEach((input, index) => {
+                // Mobile-specific enhancements
+                input.addEventListener('focus', (e) => {
+                    // Clear error state on focus
+                    input.classList.remove('error');
+                    document.getElementById('securityError').classList.remove('show');
+                    
+                    // Select all text on focus for better mobile UX
+                    setTimeout(() => {
+                        input.select();
+                    }, 10);
+                });
+                
                 input.addEventListener('input', (e) => {
                     const value = e.target.value;
                     
@@ -1400,8 +1527,14 @@
                     if (e.key === 'ArrowRight' && index < codeInputs.length - 1) {
                         codeInputs[index + 1].focus();
                     }
+                    
+                    // Prevent non-numeric input on mobile
+                    if (!/\d|Backspace|Delete|ArrowLeft|ArrowRight|Tab/.test(e.key)) {
+                        e.preventDefault();
+                    }
                 });
                 
+                // Enhanced paste handling for mobile
                 input.addEventListener('paste', (e) => {
                     e.preventDefault();
                     const pastedData = e.clipboardData.getData('text');
@@ -1423,6 +1556,31 @@
                         codeInputs[nextIndex].focus();
                     }
                 });
+                
+                // Better mobile touch handling
+                input.addEventListener('touchstart', (e) => {
+                    // Prevent zoom on touch for better UX
+                    e.preventDefault();
+                    input.focus();
+                }, { passive: false });
+            });
+            
+            // Auto-focus first input when security page is shown
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.target.id === 'securityCodePage' && 
+                        mutation.target.style.display === 'block') {
+                        setTimeout(() => {
+                            codeInputs[0].focus();
+                        }, 100);
+                    }
+                });
+            });
+            
+            const securityCodePage = document.getElementById('securityCodePage');
+            observer.observe(securityCodePage, { 
+                attributes: true, 
+                attributeFilter: ['style'] 
             });
         });
 
