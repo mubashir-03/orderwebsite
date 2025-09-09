@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Order Management</title>
+    <link rel="icon" href="https://i.ibb.co/HpDCts0y/klklklkl.jpg" type="image/jpg">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- jsPDF library for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -155,6 +157,14 @@
             background: var(--primary-hover);
         }
 
+        .btn-secondary {
+            background: var(--text-muted-light);
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: var(--text-light);
+        }
+
         .btn-danger, .delete-btn {
             background: var(--danger);
             color: white;
@@ -227,6 +237,7 @@
             gap: 16px;
             margin-bottom: 24px;
             align-items: center;
+            position: relative;
         }
 
         .search-box, .filter-select {
@@ -239,7 +250,33 @@
             flex: 1;
             min-width: 200px;
         }
-        .search-box:focus, .filter-select:focus {
+        
+        .search-box {
+            padding-right: 45px; /* Add space for the icon */
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted-light);
+            font-size: 1rem;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .search-box:focus ~ .search-icon {
+            color: var(--primary);
+        }
+        
+        .filter-select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
@@ -266,6 +303,15 @@
         .order-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
+        }
+
+        .no-results-message {
+            grid-column: 1 / -1;
+            background: var(--panel-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            margin: 20px 0;
         }
 
         .new-badge {
@@ -399,6 +445,162 @@
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        /* Password Input Container */
+        .password-input-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .password-input {
+            padding-right: 45px !important; /* Space for eye icon */
+            width: 100%;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted-light);
+            font-size: 1.1rem;
+            padding: 4px;
+            border-radius: 4px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+        }
+        
+        .password-toggle:hover {
+            color: var(--text-light);
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        .password-toggle:focus {
+            outline: none;
+            color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        /* Login Loading State */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        .btn-loading .btn-text {
+            opacity: 0;
+        }
+        
+        .btn-loading::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Security Code Page */
+        .security-code-container {
+            max-width: 420px;
+            margin: 8vh auto;
+            padding: 40px;
+            background: var(--panel-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        
+        .security-code-container h2 {
+            font-size: 1.75rem;
+            margin-bottom: 12px;
+            color: var(--text-light);
+        }
+        
+        .security-code-container p {
+            color: var(--text-muted-light);
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+        }
+        
+        .code-input-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        
+        .code-digit {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: var(--bg-light);
+            transition: var(--transition);
+            outline: none;
+        }
+        
+        .code-digit:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            background: white;
+        }
+        
+        .code-digit.filled {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .code-digit.error {
+            border-color: var(--danger);
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .security-code-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .security-error {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .security-error.show {
+            opacity: 1;
         }
 
         /* Notification */
@@ -674,13 +876,33 @@
         <h2>Admin Login</h2>
         <form id="loginForm" class="login-form">
             <input type="email" id="loginEmail" class="form-input" placeholder="Email" required>
-            <div style="position:relative;">
-                <input type="password" id="loginPassword" class="form-input" placeholder="Password" required style="padding-right:40px;">
-                <button type="button" id="togglePassword" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:1.2rem; color:#6c757d;">
+            <div class="password-input-container">
+                <input type="password" id="loginPassword" class="form-input password-input" placeholder="Password" required>
+                <button type="button" id="togglePassword" class="password-toggle">
                     <i class="fas fa-eye"></i>
                 </button>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary" id="loginBtn">
+                <span class="btn-text">Login</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Security Code Verification Page -->
+    <div id="securityCodePage" class="security-code-container" style="display: none;">
+        <h2>Security Verification</h2>
+        <p>Please enter the 6-digit security code to access the dashboard</p>
+        <form id="securityCodeForm" class="security-code-form">
+            <div class="code-input-container">
+                <input type="text" class="code-digit" maxlength="1" data-index="0">
+                <input type="text" class="code-digit" maxlength="1" data-index="1">
+                <input type="text" class="code-digit" maxlength="1" data-index="2">
+                <input type="text" class="code-digit" maxlength="1" data-index="3">
+                <input type="text" class="code-digit" maxlength="1" data-index="4">
+                <input type="text" class="code-digit" maxlength="1" data-index="5">
+            </div>
+            <div class="security-error" id="securityError">Invalid security code. Please try again.</div>
+            <button type="submit" class="btn btn-primary">Verify Code</button>
         </form>
     </div>
     
@@ -732,8 +954,8 @@
             </div>
             
             <div class="search-filter">
-                <input type="text" id="searchInput" class="search-box" placeholder="Search by name or email...">
-              
+                <input type="text" id="searchInput" class="search-box" placeholder="Search by name, email or order ID...">
+                <i class="fas fa-search search-icon"></i>
             </div>
             
             <div id="ordersContainer" class="orders-container">
@@ -753,10 +975,6 @@
             <div class="modal-body">
                 <h3 class="section-title">Client Information</h3>
                 <table class="info-table">
-                    <tr>
-                        <th>Field</th>
-                        <th>Value</th>
-                    </tr>
                     <tr>
                         <td><strong>Name</strong></td>
                         <td id="modalName">N/A</td>
@@ -781,10 +999,6 @@
                 
                 <h3 class="section-title">Order Information</h3>
                 <table class="info-table">
-                    <tr>
-                        <th>Field</th>
-                        <th>Value</th>
-                    </tr>
                     <tr>
                         <td><strong>Service</strong></td>
                         <td id="modalService">N/A</td>
@@ -913,14 +1127,16 @@
 
         // DOM elements
         const loginPage = document.getElementById('loginPage');
+        const securityCodePage = document.getElementById('securityCodePage');
         const dashboardPage = document.getElementById('dashboardPage');
         const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const securityCodeForm = document.getElementById('securityCodeForm');
         const userEmailFull = document.getElementById('userEmailFull');
         const ordersContainer = document.getElementById('ordersContainer');
         const searchInput = document.getElementById('searchInput');
-        const statusFilter = document.getElementById('statusFilter');
-        const paymentFilter = document.getElementById('paymentFilter');
         const notification = document.getElementById('notification');
+        const securityError = document.getElementById('securityError');
 
         // Modal elements
         const orderModal = document.getElementById('orderModal');
@@ -997,18 +1213,41 @@
             }
         }
 
+        // Security code variables
+        const SECURITY_CODE = '137221';
+        let isCodeVerified = false;
+
         // Auth state observer
         auth.onAuthStateChanged((user) => {
+            // Remove loading state from login button when auth state resolves
+            if (loginBtn) {
+                loginBtn.classList.remove('btn-loading');
+                loginBtn.disabled = false;
+            }
+            
             if (user) {
-                // User is signed in
+                // User is signed in, but need to verify security code
                 userEmailFull.textContent = user.email;
                 loginPage.style.display = 'none';
-                dashboardPage.style.display = 'block';
-                setupOrdersListener();
+                securityCodePage.style.display = 'block';
+                dashboardPage.style.display = 'none';
+                // Reset security code verification
+                isCodeVerified = false;
+                clearSecurityCodeInputs();
+                
+                // Mark app as initialized and hide preloader
+                isAppInitialized = true;
+                checkAppReady();
             } else {
                 // User is signed out
                 loginPage.style.display = 'block';
+                securityCodePage.style.display = 'none';
                 dashboardPage.style.display = 'none';
+                isCodeVerified = false;
+                
+                // Mark app as initialized and hide preloader
+                isAppInitialized = true;
+                checkAppReady();
                 
                 // Clean up the snapshot listener when user logs out
                 if (ordersSnapshotUnsubscribe) {
@@ -1024,18 +1263,174 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             
+            // Show loading state
+            loginBtn.classList.add('btn-loading');
+            loginBtn.disabled = true;
+            
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     showNotification('Login successful!', 'success');
+                    // Loading state will be removed when auth state changes
                 })
                 .catch((error) => {
+                    // Hide loading state on error
+                    loginBtn.classList.remove('btn-loading');
+                    loginBtn.disabled = false;
                     showNotification('Error: ' + error.message, 'error');
                 });
+        });
+
+        // Security Code Functions
+        function clearSecurityCodeInputs() {
+            const codeInputs = document.querySelectorAll('.code-digit');
+            codeInputs.forEach(input => {
+                input.value = '';
+                input.classList.remove('filled', 'error');
+            });
+            securityError.classList.remove('show');
+            codeInputs[0].focus();
+        }
+
+        function showSecurityError() {
+            const codeInputs = document.querySelectorAll('.code-digit');
+            codeInputs.forEach(input => {
+                input.classList.add('error');
+            });
+            securityError.classList.add('show');
+            
+            setTimeout(() => {
+                codeInputs.forEach(input => {
+                    input.classList.remove('error');
+                });
+                clearSecurityCodeInputs();
+            }, 2000);
+        }
+
+        function verifySecurityCode() {
+            const codeInputs = document.querySelectorAll('.code-digit');
+            const enteredCode = Array.from(codeInputs).map(input => input.value).join('');
+            
+            if (enteredCode === SECURITY_CODE) {
+                isCodeVerified = true;
+                securityCodePage.style.display = 'none';
+                dashboardPage.style.display = 'block';
+                setupOrdersListener();
+                
+                // Hide preloader when dashboard is shown
+                setTimeout(() => {
+                    hidePreloader();
+                }, 300);
+                
+                showNotification('Security code verified! Welcome to the dashboard.', 'success');
+            } else {
+                showSecurityError();
+                showNotification('Invalid security code. Please try again.', 'error');
+            }
+        }
+
+        // Function to check if user has proper access
+        function checkAccess() {
+            const user = auth.currentUser;
+            if (!user || !isCodeVerified) {
+                // Redirect to appropriate page
+                if (!user) {
+                    loginPage.style.display = 'block';
+                    securityCodePage.style.display = 'none';
+                    dashboardPage.style.display = 'none';
+                } else {
+                    loginPage.style.display = 'none';
+                    securityCodePage.style.display = 'block';
+                    dashboardPage.style.display = 'none';
+                    clearSecurityCodeInputs();
+                }
+                return false;
+            }
+            return true;
+        }
+
+        // Security code form handler
+        securityCodeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            verifySecurityCode();
+        });
+
+        // Security code input handling
+        document.addEventListener('DOMContentLoaded', () => {
+            const codeInputs = document.querySelectorAll('.code-digit');
+            
+            codeInputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    
+                    // Only allow numbers
+                    if (!/^\d$/.test(value) && value !== '') {
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    if (value !== '') {
+                        input.classList.add('filled');
+                        
+                        // Move to next input
+                        if (index < codeInputs.length - 1) {
+                            codeInputs[index + 1].focus();
+                        } else {
+                            // All digits entered, verify automatically
+                            setTimeout(() => {
+                                verifySecurityCode();
+                            }, 100);
+                        }
+                    } else {
+                        input.classList.remove('filled');
+                    }
+                });
+                
+                input.addEventListener('keydown', (e) => {
+                    // Handle backspace
+                    if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                        codeInputs[index - 1].focus();
+                        codeInputs[index - 1].value = '';
+                        codeInputs[index - 1].classList.remove('filled');
+                    }
+                    
+                    // Handle arrow keys
+                    if (e.key === 'ArrowLeft' && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                    if (e.key === 'ArrowRight' && index < codeInputs.length - 1) {
+                        codeInputs[index + 1].focus();
+                    }
+                });
+                
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text');
+                    const digits = pastedData.replace(/\D/g, '').slice(0, 6);
+                    
+                    digits.split('').forEach((digit, i) => {
+                        if (i < codeInputs.length) {
+                            codeInputs[i].value = digit;
+                            codeInputs[i].classList.add('filled');
+                        }
+                    });
+                    
+                    if (digits.length === 6) {
+                        setTimeout(() => {
+                            verifySecurityCode();
+                        }, 100);
+                    } else if (digits.length > 0) {
+                        const nextIndex = Math.min(digits.length, codeInputs.length - 1);
+                        codeInputs[nextIndex].focus();
+                    }
+                });
+            });
         });
 
         // Logout handler
         logoutDropdownBtn.addEventListener('click', () => {
             auth.signOut().then(() => {
+                isCodeVerified = false;
+                clearSecurityCodeInputs();
                 showNotification('Logged out successfully', 'success');
             }).catch((error) => {
                 showNotification('Error signing out: ' + error.message, 'error');
@@ -1155,22 +1550,10 @@
             // Add event listener for view details button
             const viewMoreBtn = orderCard.querySelector('.view-more-btn');
             viewMoreBtn.addEventListener('click', async (e) => {
-                // Mark as viewed in Firebase
-                if (!order.viewed) {
-                    await db.collection("orders").doc(orderId).update({
-                        viewed: true,
-                        viewedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    // Remove new badge
-                    const newBadge = orderCard.querySelector('.new-badge');
-                    if (newBadge) newBadge.remove();
-                }
-                
                 // Get the formatted ID for this order
                 const formattedId = await getOrCreateFormattedOrderId(orderId);
                 
-                // Show modal with order details
+                // Show modal with order details (this will handle marking as viewed and removing badge)
                 showOrderModal(orderId, order, formattedId);
             });
             
@@ -1186,24 +1569,7 @@
             currentOrderId = orderId;
             currentOrderData = order;
             
-            // If order hasn't been viewed yet, mark it as viewed
-            if (!order.viewed) {
-                await db.collection("orders").doc(orderId).update({
-                    viewed: true,
-                    viewedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Update the order data
-                currentOrderData.viewed = true;
-                
-                // Remove the new badge from the order card if it exists
-                const orderCard = document.querySelector(`.order-card[data-order-id="${orderId}"]`);
-                if (orderCard) {
-                    const newBadge = orderCard.querySelector('.new-badge');
-                    if (newBadge) newBadge.remove();
-                }
-            }
-            
+            // Show modal immediately first
             // Populate modal with order data
             document.getElementById('modalOrderId').textContent = `#${formattedOrderId}`;
             document.getElementById('modalOrderDate').textContent = order.createdAt ? order.createdAt.toDate().toLocaleString() : 'Date not available';
@@ -1237,31 +1603,70 @@
             
             // Show modal
             orderModal.classList.add('active');
+            
+            // Handle marking as viewed and removing badge (in background after modal is shown)
+            if (!order.viewed) {
+                // Remove new badge immediately for better UX
+                const orderCard = document.querySelector(`.order-card[data-order-id="${orderId}"]`);
+                if (orderCard) {
+                    const newBadge = orderCard.querySelector('.new-badge');
+                    if (newBadge) newBadge.remove();
+                }
+                
+                // Update Firebase in background
+                try {
+                    await db.collection("orders").doc(orderId).update({
+                        viewed: true,
+                        viewedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Update the order data
+                    currentOrderData.viewed = true;
+                } catch (error) {
+                    console.error("Error marking order as viewed:", error);
+                    // If Firebase update fails, we can still show the modal
+                }
+            }
         }
-// Preloader logic
-const preloader = document.getElementById('preloader');
-function hidePreloader() {
-  preloader.classList.add('hide');
-}
-
-// Show preloader on page load
-preloader.style.display = 'flex';
-
-// Wrap Firebase data loading logic
-function fetchFirebaseData() {
-  // Replace with your actual Firebase fetch logic
-  return new Promise((resolve) => {
-    setTimeout(resolve, 5000); // Simulate 2s load
-  });
-}
-
-window.addEventListener('DOMContentLoaded', async () => {
-  preloader.style.display = 'flex';
-  await fetchFirebaseData(); // Replace with your actual Firebase fetch
-  hidePreloader();
-});
-// If you already have Firebase fetch logic, call hidePreloader() after data loads
-// If you already have Firebase
+        
+        // Preloader logic
+        const preloader = document.getElementById('preloader');
+        let isAppInitialized = false;
+        
+        function hidePreloader() {
+            preloader.classList.add('hide');
+        }
+        
+        function showPreloader() {
+            preloader.style.display = 'flex';
+            preloader.classList.remove('hide');
+        }
+        
+        // Show preloader on page load
+        showPreloader();
+        
+        // Fallback timeout to hide preloader if Firebase takes too long (15 seconds max)
+        setTimeout(() => {
+            if (!isAppInitialized) {
+                console.warn('Firebase initialization took too long, hiding preloader');
+                isAppInitialized = true;
+                hidePreloader();
+                // Show login page as fallback
+                loginPage.style.display = 'block';
+                securityCodePage.style.display = 'none';
+                dashboardPage.style.display = 'none';
+            }
+        }, 15000);
+        
+        // Function to check if app should hide preloader
+        function checkAppReady() {
+            // Hide preloader when user authentication is resolved and appropriate page is shown
+            if (isAppInitialized) {
+                setTimeout(() => {
+                    hidePreloader();
+                }, 500); // Small delay for smooth transition
+            }
+        }
         // Update download and print buttons based on status
         function updateDownloadPrintButtons(order) {
             // Update download button
@@ -1468,6 +1873,14 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         // Generate PDF for download or printing with proper line spacing
         function generatePDF(orderId, orderData, formattedOrderId, forPrint = false) {
+            // Function to format date with day name
+            const formatDateWithDay = (date) => {
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const dayName = days[date.getDay()];
+                const formattedDate = date.toLocaleString();
+                return `${dayName}, ${formattedDate}`;
+            };
+            
             const doc = new jsPDF();
             const pageHeight = doc.internal.pageSize.height;
             const pageWidth = doc.internal.pageSize.width;
@@ -1522,7 +1935,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 
                 // Function to add footer to each page
                 const addFooter = () => {
-                    const downloadDate = new Date().toLocaleString();
+                    const downloadDate = formatDateWithDay(new Date());
                     doc.setFontSize(8);
                     doc.setTextColor(150, 150, 150);
                     doc.text(`Page ${currentPage} of ${totalPages.length} | Mubashir Khan Tech Studio | Printed on: ${downloadDate}`, margin, pageHeight - 10);
@@ -1615,6 +2028,9 @@ window.addEventListener('DOMContentLoaded', async () => {
                 });
                 
                 yPosition = doc.lastAutoTable.finalY + 15;
+                
+                // Add footer to first page before adding new page
+                addFooter();
                 
                 // Add a new page for project details
                 checkPageBreak(30);
@@ -1712,6 +2128,14 @@ window.addEventListener('DOMContentLoaded', async () => {
                 // Similar logic as above but without the logo
                 // This is a simplified version for error case
                 
+                // Function to format date with day name
+                const formatDateWithDay = (date) => {
+                    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    const dayName = days[date.getDay()];
+                    const formattedDate = date.toLocaleString();
+                    return `${dayName}, ${formattedDate}`;
+                };
+                
                 const doc = new jsPDF();
                 
                 // Add header
@@ -1769,6 +2193,12 @@ window.addEventListener('DOMContentLoaded', async () => {
                     columnStyles: { 0: { fontStyle: 'bold', cellWidth: 80 } }
                 });
                 
+                // Add footer to first page
+                const downloadDate = formatDateWithDay(new Date());
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text(`Page 1 of 2 | Mubashir Khan Tech Studio | Printed on: ${downloadDate}`, 14, doc.internal.pageSize.height - 10);
+                
                 // Add a new page for project details
                 doc.addPage();
                 
@@ -1807,10 +2237,10 @@ window.addEventListener('DOMContentLoaded', async () => {
                 }
                 
                 // Add footer on second page
-                const downloadDate = new Date().toLocaleString();
+                const downloadDate2 = formatDateWithDay(new Date());
                 doc.setFontSize(8);
                 doc.setTextColor(150, 150, 150);
-                doc.text(`Page 2 of 2 | Mubashir Khan Tech Studio | Printed on: ${downloadDate}`, 14, doc.internal.pageSize.height - 10);
+                doc.text(`Page 2 of 2 | Mubashir Khan Tech Studio | Printed on: ${downloadDate2}`, 14, doc.internal.pageSize.height - 10);
                 
                 if (forPrint) {
                     const pdfBlob = doc.output('blob');
@@ -1832,35 +2262,104 @@ window.addEventListener('DOMContentLoaded', async () => {
             }, 3000);
         }
 
-        // Search and filter functionality
+        // Search functionality
         searchInput.addEventListener('input', filterOrders);
-        statusFilter.addEventListener('change', filterOrders);
-        paymentFilter.addEventListener('change', filterOrders);
+
+        // Keyboard shortcut: Escape to clear search
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && searchInput.value.length > 0) {
+                clearSearch();
+                searchInput.blur(); // Remove focus from search input
+            }
+        });
+
+        function clearSearch() {
+            searchInput.value = '';
+            filterOrders();
+            showNotification('Search cleared', 'info');
+        }
 
         function filterOrders() {
-            const searchText = searchInput.value.toLowerCase();
-            const statusValue = statusFilter.value;
-            const paymentValue = paymentFilter.value;
+            const searchText = searchInput.value.toLowerCase().trim();
             
             const orderCards = document.querySelectorAll('.order-card');
+            let visibleCount = 0;
+            let totalCount = orderCards.length;
             
             orderCards.forEach(card => {
-                const name = card.querySelector('.detail-row:nth-child(1) .detail-value').textContent.toLowerCase();
-                const email = card.querySelector('.detail-row:nth-child(2) .detail-value').textContent.toLowerCase();
-                const status = card.querySelector('.status-badge').textContent.toLowerCase();
-                const paymentStatus = card.querySelector('.payment-paid, .payment-pending').textContent.toLowerCase();
+                // Get order details from the card
+                const nameElement = card.querySelector('.detail-row:nth-child(1) .detail-value');
+                const emailElement = card.querySelector('.detail-row:nth-child(2) .detail-value a');
+                const orderIdElement = card.querySelector('.order-id');
                 
-                const nameMatch = name.includes(searchText);
-                const emailMatch = email.includes(searchText);
-                const statusMatch = statusValue === 'all' || status === statusValue;
-                const paymentMatch = paymentValue === 'all' || paymentStatus === paymentValue;
+                // Extract text content safely
+                const name = nameElement ? nameElement.textContent.toLowerCase() : '';
+                const email = emailElement ? emailElement.textContent.toLowerCase() : '';
+                const orderId = orderIdElement ? orderIdElement.textContent.toLowerCase() : '';
                 
-                if ((nameMatch || emailMatch) && statusMatch && paymentMatch) {
-                    card.style.display = 'block';
+                // Search matching - check name, email, or order ID (partial matching)
+                const searchMatches = searchText === '' || 
+                    name.includes(searchText) || 
+                    email.includes(searchText) || 
+                    orderId.includes(searchText);
+                
+                // Show or hide the card
+                if (searchMatches) {
+                    card.style.display = 'flex';
+                    visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
+            
+            // Scroll to top when searching (only if there's search text)
+            if (searchText.length > 0) {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // Update search input placeholder with results count
+            updateSearchPlaceholder(visibleCount, totalCount, searchText);
+            
+            // Show/hide no results message
+            showNoResultsMessage(visibleCount === 0 && searchText.length > 0);
+        }
+
+        // Update search placeholder with results count
+        function updateSearchPlaceholder(visibleCount, totalCount, searchText) {
+            if (searchText.length > 0) {
+                searchInput.placeholder = `Found ${visibleCount} of ${totalCount} orders`;
+            } else {
+                searchInput.placeholder = 'Search by name, email or order ID...';
+            }
+        }
+
+        // Function to show/hide no results message
+        function showNoResultsMessage(show) {
+            let noResultsMsg = document.getElementById('noResultsMessage');
+            
+            if (show) {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.id = 'noResultsMessage';
+                    noResultsMsg.className = 'no-results-message';
+                    noResultsMsg.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: var(--text-muted-light);">
+                            <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 16px; opacity: 0.5;"></i>
+                            <p style="margin: 0; font-size: 1.1rem;">No orders found matching your search criteria</p>
+                            <p style="margin: 8px 0 0 0; font-size: 0.9rem;">Try adjusting your search terms or filters</p>
+                        </div>
+                    `;
+                    ordersContainer.appendChild(noResultsMsg);
+                }
+                noResultsMsg.style.display = 'block';
+            } else {
+                if (noResultsMsg) {
+                    noResultsMsg.style.display = 'none';
+                }
+            }
         }
 
         // Show/hide password toggle
